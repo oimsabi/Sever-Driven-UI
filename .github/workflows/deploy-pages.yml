@@ -1,0 +1,44 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      # ลบบรรทัดล่างนี้ออกได้หลัง merge เข้า main แล้ว
+      # (ใส่ไว้เพื่อให้ดูหน้าเว็บจริงได้ก่อนที่จะ merge)
+      - claude/web-explanation-animation-ebru55
+  workflow_dispatch:
+
+# สิทธิ์ขั้นต่ำที่ actions/deploy-pages ต้องใช้
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# ถ้ามี deploy ซ้อนกัน ให้ตัวใหม่ชนะ แต่ไม่ยกเลิกตัวที่กำลัง deploy อยู่
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # enablement: true จะเปิด GitHub Pages ให้อัตโนมัติถ้ายังไม่ได้เปิด
+      # (ใช้ได้เมื่อ repo เป็น public หรือบัญชีเป็น GitHub Pro ขึ้นไป)
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # เว็บเป็น static ล้วน ไม่ต้อง build — อัปโหลดทั้ง repo ขึ้นไปได้เลย
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
