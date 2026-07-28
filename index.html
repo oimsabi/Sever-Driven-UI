@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server-Driven UI — อธิบายหลักการทำงานด้วยภาพเคลื่อนไหว</title>
+<meta name="description" content="หน้าเว็บอธิบายหลักการทำงานของ Server-Driven UI (SDUI) ด้วยแอนิเมชัน HTML/CSS/JavaScript พร้อม playground ให้ลองเล่นจริง">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top">
+    <span class="nav__logo">🧩</span>
+    <span>Server-Driven UI</span>
+  </a>
+  <nav class="nav__links">
+    <a href="#concept">แนวคิด</a>
+    <a href="#compare">เปรียบเทียบ</a>
+    <a href="#flow">ขั้นตอนการทำงาน</a>
+    <a href="#render">JSON → UI</a>
+    <a href="#playground">ลองเล่น</a>
+    <a href="#update">อัปเดตทันที</a>
+    <a href="#tradeoff">ข้อดี/ข้อเสีย</a>
+  </nav>
+  <button class="motion-toggle" id="motionToggle" title="เปิด/ปิดแอนิเมชัน" aria-pressed="false">
+    <span aria-hidden="true">🎬</span><span class="motion-toggle__label">แอนิเมชัน: เปิด</span>
+  </button>
+</header>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="hero__inner">
+    <div class="hero__copy">
+      <span class="pill">อธิบายหลักการทำงานด้วยภาพเคลื่อนไหว</span>
+      <h1>หน้าตาแอป <em>ไม่ได้</em> ถูกฝังไว้ในแอป<br>แต่ถูก <em>ส่งมาจากเซิร์ฟเวอร์</em></h1>
+      <p class="hero__lead">
+        <strong>Server-Driven UI (SDUI)</strong> คือแนวคิดที่ให้เซิร์ฟเวอร์เป็นคนบอกว่า
+        “หน้าจอนี้ประกอบด้วยอะไรบ้าง เรียงยังไง ข้อมูลอะไร” ในรูปแบบ JSON
+        แล้วฝั่งไคลเอนต์ทำหน้าที่แค่ <em>แปล JSON เป็น UI จริง</em> เท่านั้น
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#flow">▶ ดูขั้นตอนการทำงาน</a>
+        <a class="btn btn--ghost" href="#playground">🧪 ลองแก้ JSON เอง</a>
+      </div>
+      <ul class="hero__stats">
+        <li><b>1</b><span>ชุด JSON<br>ใช้ได้ทุกแพลตฟอร์ม</span></li>
+        <li><b>0</b><span>ครั้งที่ต้อง<br>ส่งขึ้น App Store</span></li>
+        <li><b>~1s</b><span>เวลาที่ผู้ใช้<br>เห็น UI ใหม่</span></li>
+      </ul>
+    </div>
+
+    <!-- แอนิเมชันวนลูป: JSON → UI -->
+    <div class="hero__demo" aria-hidden="true">
+      <div class="loop">
+        <div class="loop__json">
+          <div class="loop__bar loop__bar--head"></div>
+          <div class="loop__line" style="--w:70%"></div>
+          <div class="loop__line" style="--w:90%"></div>
+          <div class="loop__line" style="--w:55%"></div>
+          <div class="loop__line" style="--w:80%"></div>
+          <div class="loop__line" style="--w:40%"></div>
+          <span class="loop__tag">config.json</span>
+        </div>
+        <div class="loop__wire">
+          <span class="loop__dot"></span>
+          <span class="loop__dot" style="animation-delay:.5s"></span>
+          <span class="loop__dot" style="animation-delay:1s"></span>
+        </div>
+        <div class="loop__phone">
+          <div class="loop__notch"></div>
+          <div class="loop__screen">
+            <div class="loop__el loop__el--img"></div>
+            <div class="loop__el loop__el--title"></div>
+            <div class="loop__el loop__el--text"></div>
+            <div class="loop__el loop__el--text" style="--w:60%"></div>
+            <div class="loop__el loop__el--btn"></div>
+          </div>
+          <span class="loop__tag">รับมาแล้วเรนเดอร์</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a class="hero__scroll" href="#concept" aria-label="เลื่อนลง">⌄</a>
+</section>
+
+<main>
+
+<!-- ============ CONCEPT ============ -->
+<section class="section" id="concept">
+  <div class="section__head reveal">
+    <span class="kicker">01 — แนวคิด</span>
+    <h2>ใครเป็นคน “ตัดสินใจ” ว่าหน้าจอหน้าตาแบบไหน?</h2>
+    <p>หัวใจของเรื่องนี้มีแค่คำถามเดียว คือ <b>ตรรกะของหน้าตา (UI logic) ถูกเก็บไว้ที่ไหน</b></p>
+  </div>
+
+  <div class="split reveal">
+    <article class="brief brief--classic">
+      <header><span class="brief__icon">📱</span><h3>แบบดั้งเดิม — Client-Driven UI</h3></header>
+      <p>โค้ดหน้าจอทั้งหมดถูก <b>คอมไพล์ฝังไว้ในตัวแอป</b> เซิร์ฟเวอร์ส่งมาแค่ “ข้อมูลดิบ”</p>
+      <pre class="code"><code><span class="c-cm">// เซิร์ฟเวอร์ส่งมาแค่ข้อมูล</span>
+{ <span class="c-k">"name"</span>: <span class="c-s">"รองเท้าวิ่ง Aero X"</span>,
+  <span class="c-k">"price"</span>: <span class="c-n">2490</span>,
+  <span class="c-k">"discount"</span>: <span class="c-n">20</span> }
+
+<span class="c-cm">// แอปเป็นคนตัดสินใจเองว่าจะวาดยังไง</span>
+Column {
+  Image(product.image)
+  Text(product.name)
+  Text(<span class="c-s">"฿"</span> + product.price)
+}</code></pre>
+      <ul class="brief__list">
+        <li class="bad">อยากย้ายปุ่ม → ต้อง build + ส่งขึ้น store ใหม่</li>
+        <li class="bad">iOS / Android / Web ต้องแก้แยกกัน 3 ที่</li>
+        <li class="bad">ผู้ใช้ที่ไม่อัปเดตแอป จะเห็นของเก่าตลอดไป</li>
+      </ul>
+    </article>
+
+    <div class="split__vs" aria-hidden="true"><span>VS</span></div>
+
+    <article class="brief brief--sdui">
+      <header><span class="brief__icon">🛰️</span><h3>Server-Driven UI</h3></header>
+      <p>เซิร์ฟเวอร์ส่ง <b>“พิมพ์เขียวของหน้าจอ”</b> มาด้วย แอปแค่แปลตามที่บอก</p>
+      <pre class="code"><code><span class="c-cm">// เซิร์ฟเวอร์ส่งทั้งโครงหน้าจอ + ข้อมูล</span>
+{ <span class="c-k">"components"</span>: [
+   { <span class="c-k">"type"</span>: <span class="c-s">"image"</span>,  <span class="c-k">"label"</span>: <span class="c-s">"👟"</span> },
+   { <span class="c-k">"type"</span>: <span class="c-s">"text"</span>,
+     <span class="c-k">"variant"</span>: <span class="c-s">"title"</span>,
+     <span class="c-k">"value"</span>: <span class="c-s">"รองเท้าวิ่ง Aero X"</span> },
+   { <span class="c-k">"type"</span>: <span class="c-s">"button"</span>,
+     <span class="c-k">"tone"</span>: <span class="c-s">"primary"</span>,
+     <span class="c-k">"value"</span>: <span class="c-s">"ซื้อเลย ฿2,490"</span> }
+]}</code></pre>
+      <ul class="brief__list">
+        <li class="good">อยากย้ายปุ่ม → แก้ JSON บนเซิร์ฟเวอร์ จบ</li>
+        <li class="good">แก้ที่เดียว ทุกแพลตฟอร์มเปลี่ยนพร้อมกัน</li>
+        <li class="good">ทำ A/B test / โปรโมชันตามเทศกาลได้ทันที</li>
+      </ul>
+    </article>
+  </div>
+
+  <div class="note reveal">
+    <b>สิ่งที่ยังอยู่ฝั่งแอปเสมอ:</b> ตัว “ชิ้นส่วน UI” (component) จริง ๆ เช่นปุ่ม การ์ด รูปภาพ
+    ยังถูกเขียนเป็นโค้ด native อยู่ในแอป — เซิร์ฟเวอร์ <em>เลือกและจัดเรียง</em> ชิ้นส่วนเหล่านั้น
+    แต่ <em>ไม่ได้ส่งโค้ดมารัน</em> (นี่คือจุดต่างจาก WebView)
+  </div>
+</section>
+
+<!-- ============ COMPARE / RACE ============ -->
+<section class="section section--alt" id="compare">
+  <div class="section__head reveal">
+    <span class="kicker">02 — เปรียบเทียบ</span>
+    <h2>แข่งกัน: “ขอเปลี่ยนสีปุ่มหน่อย” ใครถึงมือผู้ใช้ก่อน?</h2>
+    <p>กดปุ่มด้านล่างเพื่อจำลองเส้นทางการปล่อยการเปลี่ยนแปลงหนึ่งครั้ง ของทั้งสองแนวทาง</p>
+  </div>
+
+  <div class="race reveal">
+    <div class="race__toolbar">
+      <button class="btn btn--primary" id="raceStart">▶ เริ่มจำลอง</button>
+      <button class="btn btn--ghost" id="raceReset">↺ รีเซ็ต</button>
+      <span class="race__hint">แต่ละช่องคือหนึ่งขั้นตอนที่ต้องผ่านจริงในการทำงาน</span>
+    </div>
+
+    <div class="race__lanes">
+      <div class="lane" data-lane="classic">
+        <div class="lane__head">
+          <h3>📱 Client-Driven UI</h3>
+          <span class="lane__clock" data-clock>—</span>
+        </div>
+        <ol class="lane__steps">
+          <li data-step><i>1</i> แก้โค้ดในแอป</li>
+          <li data-step><i>2</i> Build &amp; ทดสอบ</li>
+          <li data-step><i>3</i> ส่งขึ้น App Store / Play</li>
+          <li data-step><i>4</i> รอทีมงานรีวิว</li>
+          <li data-step><i>5</i> ปล่อยเวอร์ชันใหม่</li>
+          <li data-step><i>6</i> รอผู้ใช้กดอัปเดต</li>
+        </ol>
+        <div class="lane__result" data-result>ผู้ใช้ยังเห็นของเดิม…</div>
+      </div>
+
+      <div class="lane lane--sdui" data-lane="sdui">
+        <div class="lane__head">
+          <h3>🛰️ Server-Driven UI</h3>
+          <span class="lane__clock" data-clock>—</span>
+        </div>
+        <ol class="lane__steps">
+          <li data-step><i>1</i> แก้ค่าใน CMS / JSON</li>
+          <li data-step><i>2</i> Deploy config (วินาที)</li>
+          <li data-step><i>3</i> ผู้ใช้เปิดแอป → ขอ config</li>
+          <li data-step><i>4</i> เรนเดอร์ UI ใหม่ทันที</li>
+        </ol>
+        <div class="lane__result" data-result>ผู้ใช้ยังเห็นของเดิม…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FLOW ============ -->
+<section class="section" id="flow">
+  <div class="section__head reveal">
+    <span class="kicker">03 — ขั้นตอนการทำงาน</span>
+    <h2>ข้อมูลวิ่งยังไง ตั้งแต่กดเปิดแอป จนเห็นหน้าจอ</h2>
+    <p>กด <b>เล่น</b> เพื่อดูทีละขั้น หรือกดที่หมายเลขเพื่อกระโดดไปขั้นที่สนใจ</p>
+  </div>
+
+  <div class="flow reveal">
+    <div class="flow__stage">
+      <svg id="flowSvg" viewBox="0 0 960 372" role="img" aria-label="แผนภาพการไหลของข้อมูลใน Server-Driven UI">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+          </marker>
+          <linearGradient id="gClient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2dd4bf"></stop><stop offset="100%" stop-color="#0ea5e9"></stop>
+          </linearGradient>
+          <linearGradient id="gServer" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a78bfa"></stop><stop offset="100%" stop-color="#6366f1"></stop>
+          </linearGradient>
+        </defs>
+
+        <!-- เส้นทาง -->
+        <path id="p1" class="wire" d="M258,196 C320,196 330,150 420,150"></path>
+        <path id="p2" class="wire" d="M600,140 C660,120 680,92 742,92"></path>
+        <path id="p3" class="wire" d="M600,220 C660,250 680,300 742,300"></path>
+        <path id="p4" class="wire" d="M420,250 C330,250 320,240 258,240"></path>
+
+        <!-- Client -->
+        <g class="node" id="nClient">
+          <rect x="60" y="120" width="198" height="200" rx="20"></rect>
+          <text class="node__t" x="159" y="152">📱 ไคลเอนต์</text>
+          <text class="node__s" x="159" y="174">แอป / เว็บ</text>
+          <g id="clientUI" class="mini">
+            <rect class="mini__el" x="92" y="192" width="134" height="26" rx="6"></rect>
+            <rect class="mini__el" x="92" y="226" width="100" height="12" rx="4"></rect>
+            <rect class="mini__el" x="92" y="246" width="134" height="12" rx="4"></rect>
+            <rect class="mini__el mini__el--cta" x="92" y="272" width="134" height="24" rx="8"></rect>
+          </g>
+        </g>
+
+        <!-- Server -->
+        <g class="node" id="nServer">
+          <rect x="420" y="120" width="180" height="180" rx="20"></rect>
+          <text class="node__t" x="510" y="154">🛰️ BFF / API</text>
+          <text class="node__s" x="510" y="176">ประกอบหน้าจอ</text>
+          <g id="serverJson" class="jsonlines">
+            <rect x="452" y="196" width="116" height="9" rx="4"></rect>
+            <rect x="452" y="212" width="92"  height="9" rx="4"></rect>
+            <rect x="452" y="228" width="106" height="9" rx="4"></rect>
+            <rect x="452" y="244" width="74"  height="9" rx="4"></rect>
+            <rect x="452" y="260" width="98"  height="9" rx="4"></rect>
+          </g>
+        </g>
+
+        <!-- CMS -->
+        <g class="node node--sm" id="nCms">
+          <rect x="742" y="50" width="170" height="84" rx="16"></rect>
+          <text class="node__t" x="827" y="82">🧰 CMS / Config</text>
+          <text class="node__s" x="827" y="104">เลย์เอาต์, โปรโมชัน, flag</text>
+        </g>
+
+        <!-- DB -->
+        <g class="node node--sm" id="nDb">
+          <rect x="742" y="258" width="170" height="84" rx="16"></rect>
+          <text class="node__t" x="827" y="290">🗄️ ฐานข้อมูล</text>
+          <text class="node__s" x="827" y="312">ข้อมูลสินค้า, ผู้ใช้</text>
+        </g>
+
+        <text class="wire__label" x="330" y="140">① ขอหน้าจอ</text>
+        <text class="wire__label" x="668" y="86">② ดึงเลย์เอาต์</text>
+        <text class="wire__label" x="664" y="296">② ดึงข้อมูล</text>
+        <text class="wire__label" x="330" y="278">④ ส่ง JSON กลับ</text>
+      </svg>
+      <div class="flow__badge" id="flowBadge">พร้อมเริ่ม</div>
+    </div>
+
+    <aside class="flow__panel">
+      <div class="flow__steps" id="flowSteps" role="tablist" aria-label="เลือกขั้นตอน"></div>
+      <div class="flow__text">
+        <h3 id="flowTitle">แต่ละขั้นเกิดอะไรขึ้น</h3>
+        <p id="flowDesc">กดปุ่ม “เล่น” เพื่อเริ่มดูการทำงานทีละขั้นตอน</p>
+        <pre class="code code--sm"><code id="flowCode">// รอเริ่มทำงาน…</code></pre>
+      </div>
+      <div class="flow__controls">
+        <button class="btn btn--ghost" id="flowPrev">‹ ก่อนหน้า</button>
+        <button class="btn btn--primary" id="flowPlay">▶ เล่น</button>
+        <button class="btn btn--ghost" id="flowNext">ถัดไป ›</button>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ RENDER MAPPING ============ -->
+<section class="section section--alt" id="render">
+  <div class="section__head reveal">
+    <span class="kicker">04 — หัวใจของฝั่งไคลเอนต์</span>
+    <h2>Component Registry: ตารางแปล “ชื่อ” ให้กลายเป็น “ของจริง”</h2>
+    <p>ไคลเอนต์เก็บ “ทะเบียนชิ้นส่วน” เอาไว้ พอเจอ <code>"type": "button"</code> ก็ไปหยิบปุ่มจริงมาวาด — กดปุ่มด้านล่างเพื่อไล่ดูทีละบรรทัด</p>
+  </div>
+
+  <div class="mapping reveal">
+    <div class="mapping__col">
+      <h4 class="mapping__label">① JSON จากเซิร์ฟเวอร์</h4>
+      <pre class="code code--tall" id="mapJson"></pre>
+    </div>
+
+    <div class="mapping__col mapping__col--mid">
+      <h4 class="mapping__label">② เปิดตารางทะเบียน</h4>
+      <div class="registry" id="registry">
+        <div class="registry__row" data-type="image"><code>"image"</code><span>→</span><b>ImageView</b></div>
+        <div class="registry__row" data-type="badge"><code>"badge"</code><span>→</span><b>Chip</b></div>
+        <div class="registry__row" data-type="text"><code>"text"</code><span>→</span><b>TextView</b></div>
+        <div class="registry__row" data-type="rating"><code>"rating"</code><span>→</span><b>RatingBar</b></div>
+        <div class="registry__row" data-type="divider"><code>"divider"</code><span>→</span><b>Divider</b></div>
+        <div class="registry__row" data-type="button"><code>"button"</code><span>→</span><b>Button</b></div>
+        <div class="registry__row registry__row--unknown" data-type="__unknown"><code>"???"</code><span>→</span><b>Fallback</b></div>
+      </div>
+      <p class="mapping__hint">ถ้าไม่เจอในทะเบียน (แอปเวอร์ชันเก่า) ต้อง <b>ข้ามอย่างปลอดภัย</b> ไม่ใช่แครช</p>
+    </div>
+
+    <div class="mapping__col">
+      <h4 class="mapping__label">③ UI จริงที่ถูกวาด</h4>
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__screen" id="mapScreen"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mapping__controls reveal">
+    <button class="btn btn--ghost" id="mapReset">↺ เริ่มใหม่</button>
+    <button class="btn btn--primary" id="mapStep">▶ แปลบรรทัดถัดไป</button>
+    <button class="btn btn--ghost" id="mapAll">⏩ แปลทั้งหมด</button>
+  </div>
+</section>
+
+<!-- ============ PLAYGROUND ============ -->
+<section class="section" id="playground">
+  <div class="section__head reveal">
+    <span class="kicker">05 — ลองเล่นเอง</span>
+    <h2>คุณคือเซิร์ฟเวอร์ — แก้ JSON แล้วดู UI เปลี่ยนสด ๆ</h2>
+    <p>หน้าจอทางขวาถูกสร้างจาก JSON ทางซ้ายล้วน ๆ ไม่มี HTML ที่เขียนตายตัวไว้เลย</p>
+  </div>
+
+  <div class="playground reveal">
+    <div class="playground__editor">
+      <div class="playground__presets">
+        <span>ตัวอย่าง:</span>
+        <button class="chip" data-preset="product">หน้าสินค้า</button>
+        <button class="chip" data-preset="promo">หน้าโปรโมชัน</button>
+        <button class="chip" data-preset="profile">หน้าโปรไฟล์</button>
+        <button class="chip chip--warn" data-preset="unknown">component ที่ไม่รู้จัก</button>
+      </div>
+      <textarea id="pgInput" spellcheck="false" aria-label="แก้ไข JSON ของหน้าจอ"></textarea>
+      <div class="playground__status" id="pgStatus"></div>
+      <details class="playground__docs">
+        <summary>ชนิด component ที่ใช้ได้ (schema ย่อ)</summary>
+        <ul>
+          <li><code>text</code> — <code>value</code>, <code>variant</code>: title / body / caption</li>
+          <li><code>button</code> — <code>value</code>, <code>tone</code>: primary / secondary / danger</li>
+          <li><code>image</code> — <code>label</code> (อีโมจิ), <code>height</code></li>
+          <li><code>card</code> — <code>children</code>: [...]</li>
+          <li><code>row</code> — <code>children</code>: [...] (วางแนวนอน)</li>
+          <li><code>badge</code> — <code>value</code>, <code>tone</code></li>
+          <li><code>rating</code> — <code>value</code> (0–5), <code>count</code></li>
+          <li><code>input</code> — <code>placeholder</code></li>
+          <li><code>list</code> — <code>items</code>: ["...", "..."]</li>
+          <li><code>divider</code>, <code>spacer</code></li>
+        </ul>
+      </details>
+    </div>
+
+    <div class="playground__preview">
+      <div class="phone phone--lg">
+        <div class="phone__notch"></div>
+        <div class="phone__screen" id="pgScreen"></div>
+      </div>
+      <p class="playground__caption">พิมพ์แล้วเรนเดอร์ทันที — นี่คือสิ่งที่แอปจริงทำทุกครั้งที่ได้รับ response</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTANT UPDATE ============ -->
+<section class="section section--alt" id="update">
+  <div class="section__head reveal">
+    <span class="kicker">06 — พลังที่แท้จริง</span>
+    <h2>เปลี่ยนหน้าจอผู้ใช้ โดยไม่ต้องปล่อยแอปเวอร์ชันใหม่</h2>
+    <p>ซ้ายคือแผงควบคุมฝั่งเซิร์ฟเวอร์ ขวาคือมือถือของผู้ใช้ที่ยังเป็นแอปเวอร์ชันเดิมตลอดทั้งเดโม</p>
+  </div>
+
+  <div class="ota reveal">
+    <div class="ota__server">
+      <div class="ota__panelhead">
+        <h3>🛰️ แผงควบคุมบนเซิร์ฟเวอร์</h3>
+        <span class="tag" id="otaServerVer">config v1</span>
+      </div>
+
+      <label class="field">
+        <span>ข้อความหัวเรื่อง</span>
+        <input type="text" id="otaTitle" value="รองเท้าวิ่ง Aero X" maxlength="40">
+      </label>
+
+      <label class="field">
+        <span>ข้อความบนปุ่ม CTA</span>
+        <input type="text" id="otaCta" value="ซื้อเลย ฿2,490" maxlength="30">
+      </label>
+
+      <label class="field">
+        <span>โทนสีปุ่ม</span>
+        <select id="otaTone">
+          <option value="primary">primary (ฟ้า-เขียว)</option>
+          <option value="secondary">secondary (เทา)</option>
+          <option value="danger">danger (แดง — เร่งการตัดสินใจ)</option>
+        </select>
+      </label>
+
+      <div class="field field--switches">
+        <label class="switch"><input type="checkbox" id="otaBadge"><span></span>แสดงป้าย “ลด 20%”</label>
+        <label class="switch"><input type="checkbox" id="otaBanner"><span></span>แทรกแบนเนอร์แคมเปญไว้บนสุด</label>
+        <label class="switch"><input type="checkbox" id="otaReview" checked><span></span>แสดงคะแนนรีวิว</label>
+      </div>
+
+      <div class="ota__actions">
+        <button class="btn btn--primary" id="otaDeploy">💾 บันทึก &amp; deploy config</button>
+        <button class="btn btn--ghost" id="otaFetch">🔄 ผู้ใช้เปิดแอป (ดึง config)</button>
+      </div>
+      <p class="ota__hint" id="otaHint">แก้ค่าด้านบน แล้วกด “บันทึก &amp; deploy” — สังเกตว่ามือถือยังไม่เปลี่ยนจนกว่าจะดึง config ใหม่</p>
+    </div>
+
+    <div class="ota__wire" aria-hidden="true"><span class="ota__packet" id="otaPacket">{ }</span></div>
+
+    <div class="ota__client">
+      <div class="ota__panelhead">
+        <h3>📱 มือถือผู้ใช้</h3>
+        <span class="tag tag--fixed">app v1.0.0 (ไม่เคยอัปเดต)</span>
+      </div>
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__screen" id="otaScreen"></div>
+      </div>
+      <span class="tag" id="otaClientVer">กำลังใช้ config v1</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRADEOFF ============ -->
+<section class="section" id="tradeoff">
+  <div class="section__head reveal">
+    <span class="kicker">07 — ต้องแลกกับอะไร</span>
+    <h2>ไม่มีสถาปัตยกรรมไหนฟรี</h2>
+    <p>SDUI แก้ปัญหาเรื่องความเร็วในการเปลี่ยนแปลง แต่ก็ย้ายความซับซ้อนไปไว้อีกที่หนึ่ง</p>
+  </div>
+
+  <div class="cards reveal">
+    <article class="card card--good">
+      <h3>✅ ได้อะไร</h3>
+      <ul>
+        <li><b>ปล่อยของเร็วมาก</b> — เปลี่ยน UI ได้ในระดับวินาที ไม่ผูกกับรอบ release</li>
+        <li><b>ความสม่ำเสมอข้ามแพลตฟอร์ม</b> — แหล่งความจริงเดียวคือ JSON</li>
+        <li><b>ทดลองได้ถูก</b> — A/B test, personalization, โปรโมชันตามช่วงเวลา</li>
+        <li><b>ย้อนกลับง่าย</b> — ถ้าพัง แค่ rollback config ไม่ต้อง hotfix แอป</li>
+        <li><b>ทีมธุรกิจ/ดีไซน์ขยับเองได้</b> ผ่าน CMS โดยไม่รบกวนทีมแอป</li>
+      </ul>
+    </article>
+    <article class="card card--bad">
+      <h3>⚠️ เสียอะไร</h3>
+      <ul>
+        <li><b>ต้องลงทุนสร้างระบบพื้นฐาน</b> — schema, renderer, CMS, เครื่องมือ preview</li>
+        <li><b>เวอร์ชันซับซ้อน</b> — แอปเก่าต้องรอด แม้เจอ component ที่ยังไม่รู้จัก</li>
+        <li><b>ดีบักยากขึ้น</b> — บั๊กอาจอยู่ใน JSON ไม่ใช่ในโค้ด</li>
+        <li><b>เสี่ยงพังทั้งระบบ</b> — config ผิดตัวเดียวกระทบผู้ใช้ทุกคนทันที</li>
+        <li><b>ต้องพึ่งเครือข่าย</b> — ต้องมี cache/offline fallback เสมอ</li>
+        <li><b>ไม่เหมาะกับหน้าจอที่ interactive สูง</b> เช่น กล้อง แผนที่ เกม</li>
+      </ul>
+    </article>
+    <article class="card card--tip">
+      <h3>🎯 ใช้เมื่อไหร่ถึงคุ้ม</h3>
+      <ul>
+        <li>หน้าจอที่ <b>เปลี่ยนบ่อยตามธุรกิจ</b> — หน้าแรก, ฟีด, หน้าโปรโมชัน, onboarding</li>
+        <li>มีหลายแพลตฟอร์มที่ต้อง <b>เหมือนกันเป๊ะ</b></li>
+        <li>ทำ <b>experiment บ่อย</b> จนรอบ release ตามไม่ทัน</li>
+        <li class="muted">ไม่คุ้มถ้า: แอปเล็ก ทีมเดียว หน้าจอนิ่ง ปล่อยอัปเดตได้อยู่แล้ว</li>
+      </ul>
+      <p class="card__foot">คำแนะนำที่ใช้กันจริง: <b>ผสมกัน</b> — ทำ SDUI เฉพาะหน้าจอที่เปลี่ยนบ่อย ส่วนหน้าจอ core ยังเขียน native ตามปกติ</p>
+    </article>
+  </div>
+
+  <div class="pitfalls reveal">
+    <h3>กับดักที่ต้องออกแบบเผื่อไว้ตั้งแต่วันแรก</h3>
+    <div class="pitfalls__grid">
+      <div><b>1. Forward compatibility</b><p>ส่ง <code>type</code> ที่แอปเก่าไม่รู้จัก ต้องข้ามเงียบ ๆ หรือแสดง fallback ไม่ใช่หน้าจอว่างหรือแครช</p></div>
+      <div><b>2. Cache &amp; offline</b><p>เก็บ config ล่าสุดไว้ในเครื่อง เปิดแอปครั้งถัดไปวาดจาก cache ก่อน แล้วค่อยรีเฟรชเบื้องหลัง</p></div>
+      <div><b>3. Schema versioning</b><p>ใส่ <code>minAppVersion</code> / <code>schemaVersion</code> ให้เซิร์ฟเวอร์เลือกส่งเลย์เอาต์ที่แอปรุ่นนั้นรองรับ</p></div>
+      <div><b>4. Action ไม่ใช่โค้ด</b><p>ส่งเป็น <code>{"action":"navigate","to":"/cart"}</code> ให้แอปตีความ — อย่าส่งสคริปต์มารัน (ช่องโหว่ความปลอดภัย)</p></div>
+      <div><b>5. Validate ก่อน deploy</b><p>ตรวจ JSON ด้วย schema ใน CI + มีหน้า preview ให้ดูก่อน เพราะปล่อยผิดคือกระทบทุกคนทันที</p></div>
+      <div><b>6. วัดผลได้</b><p>ฝัง <code>trackingId</code> ในแต่ละ component เพื่อรู้ว่าเลย์เอาต์ไหนทำงานได้ดีกว่ากัน</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RECAP ============ -->
+<section class="section section--alt" id="recap">
+  <div class="section__head reveal">
+    <span class="kicker">สรุป</span>
+    <h2>จำแค่ประโยคเดียว</h2>
+  </div>
+  <p class="recap reveal">
+    เซิร์ฟเวอร์ส่ง <b>“พิมพ์เขียว”</b> มาเป็น JSON → ไคลเอนต์มี <b>“กล่องชิ้นส่วน”</b> เป็นโค้ด native →
+    ไคลเอนต์แค่ <b>ประกอบตามพิมพ์เขียว</b> → เปลี่ยนพิมพ์เขียวเมื่อไหร่ หน้าจอผู้ใช้ก็เปลี่ยนทันทีโดยไม่ต้องอัปเดตแอป
+  </p>
+</section>
+
+</main>
+
+<footer class="footer">
+  <p>สร้างด้วย HTML + CSS + JavaScript ล้วน ไม่มีไลบรารีภายนอก · เปิดไฟล์ <code>index.html</code> ได้เลย</p>
+</footer>
+
+<script src="assets/js/renderer.js"></script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
