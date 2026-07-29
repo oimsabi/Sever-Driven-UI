@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-      # ลบบรรทัดล่างนี้ออกได้หลัง merge เข้า main แล้ว
-      # (ใส่ไว้เพื่อให้ดูหน้าเว็บจริงได้ก่อนที่จะ merge)
-      - claude/web-explanation-animation-ebru55
   workflow_dispatch:
 
 # สิทธิ์ขั้นต่ำที่ actions/deploy-pages ต้องใช้

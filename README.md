@@ -61,20 +61,15 @@ assets/js/main.js          ตัวควบคุมแต่ละส่ว�
 
 ## การเปิดหน้าเว็บผ่าน GitHub Pages
 
-มี workflow `.github/workflows/deploy-pages.yml` เตรียมไว้แล้ว
-เมื่อ Pages ถูกเปิดใช้งาน เว็บจะอยู่ที่ **https://oimsabi.github.io/Sever-Driven-UI/**
+เว็บอยู่ที่ **https://oimsabi.github.io/Sever-Driven-UI/**
 
-ต้องตั้งค่าในหน้า Settings ของ repo หนึ่งครั้งก่อน (สั่งจาก workflow ไม่ได้):
-
-1. **Settings → Pages → Build and deployment → Source: `GitHub Actions`**
-2. ไปที่แท็บ **Actions** แล้วกด **Re-run jobs** ที่ run ล่าสุด
-
-> **ข้อจำกัด:** ตอนนี้ repo เป็น **private** ซึ่ง GitHub Pages ใช้ได้เฉพาะบัญชี
-> GitHub Pro / Team / Enterprise เท่านั้น ถ้าเป็นบัญชี Free ต้องเปลี่ยน repo เป็น
-> **public** ก่อน (Settings → General → Danger Zone → Change visibility)
-> จึงจะเปิด Pages ได้
+deploy อัตโนมัติด้วย `.github/workflows/deploy-pages.yml` ทุกครั้งที่ push เข้า `main`
+(หรือกด Run workflow เองจากแท็บ Actions) เว็บเป็น static ล้วนจึงไม่มีขั้นตอน build
 
 ทุก path ในหน้าเว็บเป็น relative จึงเสิร์ฟจาก subpath `/Sever-Driven-UI/` ได้เลยโดยไม่ต้องแก้อะไร
+
+หมายเหตุ: repo ต้องเป็น public หรือใช้บัญชี GitHub Pro ขึ้นไป และตั้ง
+**Settings → Pages → Source: `GitHub Actions`** ไว้ จึงจะ deploy ได้
 
 ## แนวทาง Mobile / Tablet first
 
