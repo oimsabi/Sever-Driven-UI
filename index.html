@@ -26,7 +26,7 @@
     <a href="#tradeoff">ข้อดี/ข้อเสีย</a>
   </nav>
   <button class="motion-toggle" id="motionToggle" title="เปิด/ปิดแอนิเมชัน" aria-pressed="false">
-    <span aria-hidden="true">🎬</span><span class="motion-toggle__label">แอนิเมชัน: เปิด</span>
+    <span class="motion-toggle__icon" aria-hidden="true">🎬</span><span class="motion-toggle__label">แอนิเมชัน: เปิด</span>
   </button>
 </header>
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -208,72 +208,10 @@ Column {
   </div>
 
   <div class="flow reveal">
+    <!-- แผนภาพถูกสร้างด้วย JS จากข้อมูลชุดเดียว แล้ววางผังใหม่ตามขนาดจอ
+         (มือถือ = เรียงลงแนวตั้ง / แท็บเล็ตขึ้นไป = เรียงตามแนวนอน) -->
     <div class="flow__stage">
-      <svg id="flowSvg" viewBox="0 0 960 372" role="img" aria-label="แผนภาพการไหลของข้อมูลใน Server-Driven UI">
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
-          </marker>
-          <linearGradient id="gClient" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#2dd4bf"></stop><stop offset="100%" stop-color="#0ea5e9"></stop>
-          </linearGradient>
-          <linearGradient id="gServer" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#a78bfa"></stop><stop offset="100%" stop-color="#6366f1"></stop>
-          </linearGradient>
-        </defs>
-
-        <!-- เส้นทาง -->
-        <path id="p1" class="wire" d="M258,196 C320,196 330,150 420,150"></path>
-        <path id="p2" class="wire" d="M600,140 C660,120 680,92 742,92"></path>
-        <path id="p3" class="wire" d="M600,220 C660,250 680,300 742,300"></path>
-        <path id="p4" class="wire" d="M420,250 C330,250 320,240 258,240"></path>
-
-        <!-- Client -->
-        <g class="node" id="nClient">
-          <rect x="60" y="120" width="198" height="200" rx="20"></rect>
-          <text class="node__t" x="159" y="152">📱 ไคลเอนต์</text>
-          <text class="node__s" x="159" y="174">แอป / เว็บ</text>
-          <g id="clientUI" class="mini">
-            <rect class="mini__el" x="92" y="192" width="134" height="26" rx="6"></rect>
-            <rect class="mini__el" x="92" y="226" width="100" height="12" rx="4"></rect>
-            <rect class="mini__el" x="92" y="246" width="134" height="12" rx="4"></rect>
-            <rect class="mini__el mini__el--cta" x="92" y="272" width="134" height="24" rx="8"></rect>
-          </g>
-        </g>
-
-        <!-- Server -->
-        <g class="node" id="nServer">
-          <rect x="420" y="120" width="180" height="180" rx="20"></rect>
-          <text class="node__t" x="510" y="154">🛰️ BFF / API</text>
-          <text class="node__s" x="510" y="176">ประกอบหน้าจอ</text>
-          <g id="serverJson" class="jsonlines">
-            <rect x="452" y="196" width="116" height="9" rx="4"></rect>
-            <rect x="452" y="212" width="92"  height="9" rx="4"></rect>
-            <rect x="452" y="228" width="106" height="9" rx="4"></rect>
-            <rect x="452" y="244" width="74"  height="9" rx="4"></rect>
-            <rect x="452" y="260" width="98"  height="9" rx="4"></rect>
-          </g>
-        </g>
-
-        <!-- CMS -->
-        <g class="node node--sm" id="nCms">
-          <rect x="742" y="50" width="170" height="84" rx="16"></rect>
-          <text class="node__t" x="827" y="82">🧰 CMS / Config</text>
-          <text class="node__s" x="827" y="104">เลย์เอาต์, โปรโมชัน, flag</text>
-        </g>
-
-        <!-- DB -->
-        <g class="node node--sm" id="nDb">
-          <rect x="742" y="258" width="170" height="84" rx="16"></rect>
-          <text class="node__t" x="827" y="290">🗄️ ฐานข้อมูล</text>
-          <text class="node__s" x="827" y="312">ข้อมูลสินค้า, ผู้ใช้</text>
-        </g>
-
-        <text class="wire__label" x="330" y="140">① ขอหน้าจอ</text>
-        <text class="wire__label" x="668" y="86">② ดึงเลย์เอาต์</text>
-        <text class="wire__label" x="664" y="296">② ดึงข้อมูล</text>
-        <text class="wire__label" x="330" y="278">④ ส่ง JSON กลับ</text>
-      </svg>
+      <svg id="flowSvg" role="img" aria-label="แผนภาพการไหลของข้อมูลใน Server-Driven UI"></svg>
       <div class="flow__badge" id="flowBadge">พร้อมเริ่ม</div>
     </div>
 
@@ -321,19 +259,19 @@ Column {
       <p class="mapping__hint">ถ้าไม่เจอในทะเบียน (แอปเวอร์ชันเก่า) ต้อง <b>ข้ามอย่างปลอดภัย</b> ไม่ใช่แครช</p>
     </div>
 
-    <div class="mapping__col">
+    <div class="mapping__col mapping__col--preview">
       <h4 class="mapping__label">③ UI จริงที่ถูกวาด</h4>
       <div class="phone">
         <div class="phone__notch"></div>
         <div class="phone__screen" id="mapScreen"></div>
       </div>
     </div>
-  </div>
 
-  <div class="mapping__controls reveal">
-    <button class="btn btn--ghost" id="mapReset">↺ เริ่มใหม่</button>
-    <button class="btn btn--primary" id="mapStep">▶ แปลบรรทัดถัดไป</button>
-    <button class="btn btn--ghost" id="mapAll">⏩ แปลทั้งหมด</button>
+    <div class="mapping__controls">
+      <button class="btn btn--ghost" id="mapReset">↺ เริ่มใหม่</button>
+      <button class="btn btn--primary" id="mapStep">▶ แปลบรรทัดถัดไป</button>
+      <button class="btn btn--ghost" id="mapAll">⏩ แปลทั้งหมด</button>
+    </div>
   </div>
 </section>
 
@@ -388,7 +326,7 @@ Column {
   <div class="section__head reveal">
     <span class="kicker">06 — พลังที่แท้จริง</span>
     <h2>เปลี่ยนหน้าจอผู้ใช้ โดยไม่ต้องปล่อยแอปเวอร์ชันใหม่</h2>
-    <p>ซ้ายคือแผงควบคุมฝั่งเซิร์ฟเวอร์ ขวาคือมือถือของผู้ใช้ที่ยังเป็นแอปเวอร์ชันเดิมตลอดทั้งเดโม</p>
+    <p>ลองแก้ค่าในแผงควบคุมฝั่งเซิร์ฟเวอร์ แล้วสังเกตมือถือของผู้ใช้ ซึ่งยังเป็นแอปเวอร์ชันเดิมตลอดทั้งเดโม</p>
   </div>
 
   <div class="ota reveal">

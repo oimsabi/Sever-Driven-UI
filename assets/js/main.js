@@ -58,6 +58,7 @@
     /* ปุ่มเปิด/ปิดแอนิเมชัน — เผื่อคนที่อ่านเนื้อหาอย่างเดียว หรือเวียนหัวกับ motion */
     var toggle = $('#motionToggle');
     var label = $('.motion-toggle__label', toggle);
+    var icon = $('.motion-toggle__icon', toggle);
     var prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     var saved = null;
@@ -68,6 +69,9 @@
       document.body.classList.toggle('no-motion', !enabled);
       toggle.setAttribute('aria-pressed', String(!enabled));
       label.textContent = 'แอนิเมชัน: ' + (enabled ? 'เปิด' : 'ปิด');
+      /* มือถือซ่อนข้อความไว้ ไอคอนจึงต้องบอกสถานะเองได้ */
+      icon.textContent = enabled ? '🎬' : '⏸';
+      toggle.setAttribute('title', enabled ? 'ปิดแอนิเมชัน' : 'เปิดแอนิเมชัน');
     }
     toggle.addEventListener('click', function () {
       enabled = !enabled;
@@ -214,10 +218,90 @@
     }
   ];
 
+  /* -------------------------------------------------------------------
+   * ผังของแผนภาพ — เก็บเป็น "ข้อมูล" ชุดเดียว แล้ววางตำแหน่งใหม่ตามขนาดจอ
+   *   col = มือถือ/แท็บเล็ตแนวตั้ง — เรียงบนลงล่าง viewBox แคบ ตัวอักษรจึงใหญ่
+   *   row = จอกว้าง — เรียงซ้ายไปขวา
+   * เดิมแผนภาพเขียนตายตัวใน HTML เป็น viewBox 960 กว้าง พอย่อลงมือถือ
+   * ตัวอักษรเหลือ ~4px อ่านไม่ออก จึงเปลี่ยนมาสร้างด้วย JS เพื่อสลับผังได้
+   * ----------------------------------------------------------------- */
+  var DIAGRAM_NODES = [
+    { id: 'nClient', title: '📱 ไคลเอนต์',    sub: 'แอป / เว็บ',          inner: 'mini' },
+    { id: 'nServer', title: '🛰️ BFF / API',   sub: 'ประกอบหน้าจอ',        inner: 'json' },
+    { id: 'nCms',    title: '🧰 CMS / Config', sub: 'เลย์เอาต์, โปรโมชัน' },
+    { id: 'nDb',     title: '🗄️ ฐานข้อมูล',   sub: 'ข้อมูลสินค้า, ผู้ใช้' }
+  ];
+
+  var LAYOUTS = {
+    col: {
+      viewBox: '0 0 420 544',
+      maxWidth: '460px',
+      font: { title: 19, sub: 13, label: 15, packet: 11 },
+      packetR: 16,
+      titleDy: 32, subDy: 54,
+      nodes: {
+        nClient: { x: 50,  y: 10,  w: 320, h: 150, r: 22 },
+        nServer: { x: 50,  y: 250, w: 320, h: 150, r: 22 },
+        nCms:    { x: 16,  y: 456, w: 184, h: 76,  r: 18 },
+        nDb:     { x: 220, y: 456, w: 184, h: 76,  r: 18 }
+      },
+      mini: [
+        { x: 84, y: 74,  w: 252, h: 22, r: 6 },
+        { x: 84, y: 102, w: 180, h: 10, r: 4 },
+        { x: 84, y: 117, w: 252, h: 10, r: 4 },
+        { x: 84, y: 135, w: 252, h: 18, r: 8, cta: true }
+      ],
+      json: { x: 84, y: 316, step: 16, h: 9, widths: [230, 180, 210, 145, 195] },
+      wires: {
+        p1: 'M282,164 C282,196 282,216 282,246',
+        p2: 'M150,404 C150,428 120,436 108,452',
+        p3: 'M270,404 C270,428 300,436 312,452',
+        p4: 'M138,246 C138,216 138,196 138,164'
+      },
+      labels: [
+        { t: '①', x: 300, y: 212, anchor: 'start' },
+        { t: '④', x: 120, y: 212, anchor: 'end' }
+      ]
+    },
+    row: {
+      viewBox: '0 0 880 360',
+      maxWidth: '',
+      font: { title: 18, sub: 14, label: 14, packet: 9 },
+      packetR: 14,
+      titleDy: 33, subDy: 56,
+      nodes: {
+        nClient: { x: 30,  y: 110, w: 190, h: 190, r: 20 },
+        nServer: { x: 350, y: 110, w: 180, h: 180, r: 20 },
+        nCms:    { x: 660, y: 40,  w: 196, h: 86,  r: 16 },
+        nDb:     { x: 660, y: 240, w: 196, h: 86,  r: 16 }
+      },
+      mini: [
+        { x: 58, y: 182, w: 134, h: 26, r: 6 },
+        { x: 58, y: 216, w: 100, h: 12, r: 4 },
+        { x: 58, y: 236, w: 134, h: 12, r: 4 },
+        { x: 58, y: 262, w: 134, h: 24, r: 8, cta: true }
+      ],
+      json: { x: 382, y: 186, step: 16, h: 9, widths: [116, 92, 106, 74, 98] },
+      wires: {
+        p1: 'M220,180 C280,180 290,145 350,145',
+        p2: 'M530,135 C580,115 610,82 658,82',
+        p3: 'M530,215 C580,245 610,282 658,282',
+        p4: 'M350,240 C290,240 280,232 220,232'
+      },
+      labels: [
+        { t: '① ขอหน้าจอ',     x: 285, y: 128 },
+        { t: '② ดึงเลย์เอาต์',  x: 596, y: 122 },
+        { t: '② ดึงข้อมูล',     x: 596, y: 232 },
+        { t: '④ ส่ง JSON กลับ', x: 285, y: 272 }
+      ]
+    }
+  };
+
   function initFlow() {
     var svg = $('#flowSvg');
     if (!svg) return;
 
+    var NS = 'http://www.w3.org/2000/svg';
     var stepsBar = $('#flowSteps');
     var titleEl = $('#flowTitle');
     var descEl = $('#flowDesc');
@@ -227,6 +311,73 @@
     var current = -1;
     var playing = false;
     var token = 0;
+    var layout = null;
+    var mode = '';
+
+    function svgEl(tag, attrs) {
+      var el = document.createElementNS(NS, tag);
+      Object.keys(attrs || {}).forEach(function (k) { el.setAttribute(k, attrs[k]); });
+      return el;
+    }
+    function svgText(str, x, y, cls, size, anchor) {
+      var t = svgEl('text', { x: x, y: y, class: cls, 'font-size': size });
+      if (anchor) t.setAttribute('text-anchor', anchor);
+      t.textContent = str;
+      return t;
+    }
+    function pickMode() {
+      return window.matchMedia('(min-width: 900px)').matches ? 'row' : 'col';
+    }
+
+    /* วาดแผนภาพทั้งหมดใหม่จาก LAYOUTS[next] */
+    function build(next) {
+      mode = next;
+      layout = LAYOUTS[mode];
+      svg.textContent = '';
+      svg.setAttribute('viewBox', layout.viewBox);
+      svg.style.maxWidth = layout.maxWidth;
+      svg.style.marginInline = layout.maxWidth ? 'auto' : '';
+
+      /* เส้นก่อน เพื่อให้กล่องทับเส้นเสมอ */
+      Object.keys(layout.wires).forEach(function (id) {
+        svg.appendChild(svgEl('path', { id: id, class: 'wire', d: layout.wires[id] }));
+      });
+
+      DIAGRAM_NODES.forEach(function (n) {
+        var box = layout.nodes[n.id];
+        var cx = box.x + box.w / 2;
+        var g = svgEl('g', { class: 'node', id: n.id });
+        g.appendChild(svgEl('rect', { x: box.x, y: box.y, width: box.w, height: box.h, rx: box.r }));
+        g.appendChild(svgText(n.title, cx, box.y + layout.titleDy, 'node__t', layout.font.title));
+        g.appendChild(svgText(n.sub, cx, box.y + layout.subDy, 'node__s', layout.font.sub));
+
+        if (n.inner === 'mini') {
+          var mini = svgEl('g', { id: 'clientUI', class: 'mini' });
+          layout.mini.forEach(function (m) {
+            mini.appendChild(svgEl('rect', {
+              class: 'mini__el' + (m.cta ? ' mini__el--cta' : ''),
+              x: m.x, y: m.y, width: m.w, height: m.h, rx: m.r
+            }));
+          });
+          g.appendChild(mini);
+        }
+        if (n.inner === 'json') {
+          var jl = svgEl('g', { id: 'serverJson', class: 'jsonlines' });
+          layout.json.widths.forEach(function (w, i) {
+            jl.appendChild(svgEl('rect', {
+              x: layout.json.x, y: layout.json.y + i * layout.json.step,
+              width: w, height: layout.json.h, rx: 4
+            }));
+          });
+          g.appendChild(jl);
+        }
+        svg.appendChild(g);
+      });
+
+      (layout.labels || []).forEach(function (l) {
+        svg.appendChild(svgText(l.t, l.x, l.y, 'wire__label', layout.font.label, l.anchor || 'middle'));
+      });
+    }
 
     /* ปุ่มเลขลำดับขั้น */
     var buttons = FLOW_STEPS.map(function (_, i) {
@@ -245,20 +396,11 @@
       if (!path) return;
       var total = path.getTotalLength();
 
-      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('r', '13');
-      circle.setAttribute('class', 'packet' + (isJson ? ' packet--json' : ''));
-      var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('dy', '3.5');
-      text.setAttribute('font-size', '8.5');
-      text.setAttribute('font-family', 'monospace');
-      text.setAttribute('fill', '#04131a');
-      text.setAttribute('font-weight', '700');
-      text.textContent = label;
-      g.appendChild(circle);
-      g.appendChild(text);
+      var g = svgEl('g', { class: 'flow-packet' });
+      g.appendChild(svgEl('circle', { r: layout.packetR, class: 'packet' + (isJson ? ' packet--json' : '') }));
+      var t = svgText(label, 0, 0, 'packet__t', layout.font.packet);
+      t.setAttribute('dy', (layout.font.packet * 0.35).toFixed(1));
+      g.appendChild(t);
       svg.appendChild(g);
 
       if (motionOff()) {
@@ -273,23 +415,25 @@
       function frame(now) {
         if (myToken !== token) { g.remove(); return; }
         if (start === null) start = now;
-        var t = Math.min((now - start) / duration, 1);
-        var eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-        var p = path.getPointAtLength(total * eased);
-        g.setAttribute('transform', 'translate(' + p.x + ',' + p.y + ')');
-        g.setAttribute('opacity', String(t < 0.1 ? t / 0.1 : t > 0.9 ? (1 - t) / 0.1 : 1));
-        if (t < 1) requestAnimationFrame(frame); else g.remove();
+        var p = Math.min((now - start) / duration, 1);
+        var eased = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        var pt = path.getPointAtLength(total * eased);
+        g.setAttribute('transform', 'translate(' + pt.x + ',' + pt.y + ')');
+        g.setAttribute('opacity', String(p < 0.1 ? p / 0.1 : p > 0.9 ? (1 - p) / 0.1 : 1));
+        if (p < 1) requestAnimationFrame(frame); else g.remove();
       }
       requestAnimationFrame(frame);
     }
 
     function clearVisuals() {
       token++;
-      $$('.packet', svg).forEach(function (p) { if (p.parentNode) p.parentNode.remove(); });
+      $$('.flow-packet', svg).forEach(function (g) { g.remove(); });
       $$('.wire', svg).forEach(function (w) { w.classList.remove('is-hot'); });
       $$('.node', svg).forEach(function (n) { n.classList.remove('is-active'); });
-      $('#serverJson').classList.remove('is-building');
-      $('#clientUI').classList.remove('is-on');
+      var sj = svg.querySelector('#serverJson');
+      var cu = svg.querySelector('#clientUI');
+      if (sj) sj.classList.remove('is-building');
+      if (cu) cu.classList.remove('is-on');
     }
 
     function goTo(index) {
@@ -303,14 +447,22 @@
         b.classList.toggle('is-past', i < current);
       });
 
-      step.nodes.forEach(function (id) { $('#' + id).classList.add('is-active'); });
-      step.wires.forEach(function (id) { svg.querySelector('#' + id).classList.add('is-hot'); });
+      step.nodes.forEach(function (id) {
+        var n = svg.querySelector('#' + id);
+        if (n) n.classList.add('is-active');
+      });
+      step.wires.forEach(function (id) {
+        var w = svg.querySelector('#' + id);
+        if (w) w.classList.add('is-hot');
+      });
 
       /* สถานะสะสม: พอ JSON ถูกสร้างแล้ว ก็ควรคาอยู่ในขั้นถัด ๆ ไป */
-      if (FLOW_STEPS.slice(0, current + 1).some(function (s) { return s.build; })) {
-        $('#serverJson').classList.add('is-building');
+      var sj = svg.querySelector('#serverJson');
+      var cu = svg.querySelector('#clientUI');
+      if (sj && FLOW_STEPS.slice(0, current + 1).some(function (s) { return s.build; })) {
+        sj.classList.add('is-building');
       }
-      if (step.render) $('#clientUI').classList.add('is-on');
+      if (cu && step.render) cu.classList.add('is-on');
 
       step.packets.forEach(function (pk, i) {
         setTimeout(function () { sendPacket(pk.path, pk.label, pk.json, myToken); }, i * 220);
@@ -346,6 +498,20 @@
     $('#flowPrev').addEventListener('click', function () { stopPlaying(); goTo(current - 1); });
     $('#flowNext').addEventListener('click', function () { stopPlaying(); goTo(current + 1); });
 
+    build(pickMode());
+
+    /* หมุนจอ / ย่อขยายหน้าต่าง แล้วข้ามเส้นแบ่ง → วางผังใหม่ แล้วคงขั้นเดิมไว้ */
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        var next = pickMode();
+        if (next === mode) return;
+        build(next);
+        if (current >= 0) goTo(current);
+      }, 180);
+    });
+
     /* เริ่มเล่นอัตโนมัติครั้งเดียวเมื่อผู้ใช้เลื่อนมาถึงส่วนนี้ */
     if ('IntersectionObserver' in window) {
       var once = new IntersectionObserver(function (entries) {
@@ -353,7 +519,7 @@
           once.disconnect();
           if (current === -1) play();
         }
-      }, { threshold: 0.4 });
+      }, { threshold: 0.25 });
       once.observe($('.flow'));
     } else {
       goTo(0);
@@ -648,7 +814,7 @@
       if (cfg.banner) {
         components.push({ type: 'badge', tone: 'warn', value: '🔥 แคมเปญกลางปี' });
       }
-      components.push({ type: 'image', label: '👟', height: 108 });
+      components.push({ type: 'image', label: '👟', height: 96 });
       if (cfg.badge) {
         components.push({ type: 'badge', tone: 'danger', value: 'ลด 20%' });
       }
@@ -656,9 +822,12 @@
       if (cfg.review) {
         components.push({ type: 'rating', value: 4.5, count: 218 });
       }
-      components.push({ type: 'text', variant: 'body', value: 'น้ำหนักเบา พื้นรองรับแรงกระแทก' });
-      components.push({ type: 'divider' });
+      /* วาง CTA ไว้เหนือคำบรรยาย เพื่อให้ทุกอย่างที่แผงควบคุมแก้ได้
+         (แบนเนอร์ / ป้าย / หัวเรื่อง / รีวิว / ปุ่ม) อยู่ในส่วนบนของจอทั้งหมด
+         ไม่งั้นบนมือถือจะต้องเลื่อนลงไปดูว่าปุ่มเปลี่ยนสีแล้วหรือยัง */
       components.push({ type: 'button', tone: cfg.tone, value: cfg.cta });
+      components.push({ type: 'divider' });
+      components.push({ type: 'text', variant: 'body', value: 'น้ำหนักเบา พื้นรองรับแรงกระแทก' });
       return { screenId: 'product', components: components };
     }
 
