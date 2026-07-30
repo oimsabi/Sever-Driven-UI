@@ -1,24 +1,35 @@
 /* =====================================================================
    infographic.css — หน้าสรุป 1 หน้า (โหลดต่อจาก style.css เพื่อใช้ token ร่วมกัน)
    ---------------------------------------------------------------------
-   หน้านี้ไม่ใช้ JavaScript เลย แอนิเมชันเข้าใช้ CSS ทั้งหมด
-   เพื่อให้โหลดเร็ว พิมพ์ออกกระดาษได้ตรง และไม่มีอะไรพังได้
+   หน้านี้เล่าด้วย "ภาพ" เป็นหลัก ข้อความเป็นแค่ป้ายกำกับ 2-4 คำ
+   ไม่ใช้ JavaScript เลย · แอนิเมชันเข้าใช้ CSS · พิมพ์ออกกระดาษได้
    เขียนแบบ mobile-first เหมือนไฟล์หลัก
    ===================================================================== */
 
 .ig-body { padding-bottom: 8px; }
 
-/* แถบบนแบบบาง: มีแค่ชื่อกับปุ่มกลับไปหน้าเต็ม */
+/* คลังไอคอนต้องไม่กินที่ แต่ใช้ display:none ไม่ได้ในบางเบราว์เซอร์
+   เพราะจะทำให้ <use> อ้างไม่เจอ จึงย่อเป็นศูนย์แทน */
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ไอคอนทุกตัววาดด้วยเส้นสีปัจจุบัน จึงเปลี่ยนสีตามบริบทและพิมพ์ออกกระดาษได้ */
+.ic {
+  width: 24px; height: 24px; flex: none;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round;
+  overflow: visible;
+}
+.ic > use { fill: none; stroke: currentColor; }
+.ic--sm   { width: 17px; height: 17px; stroke-width: 2.1; }
+.ic--road { width: 34px; height: 34px; stroke-width: 1.6; }
+.ic--lg   { width: 40px; height: 40px; stroke-width: 1.6; }
+.ic--xl   { width: 60px; height: 60px; stroke-width: 1.35; }
+
 .nav--slim { justify-content: space-between; }
 .nav--slim .nav__brand span:not(.nav__logo) { display: inline; font-size: 15px; }
-.nav--slim__cta { font-size: 13px; padding: 8px 12px; min-height: var(--tap); }
-.nav--slim__cta { max-width: 52%; text-align: center; line-height: 1.3; }
+.nav--slim__cta { font-size: 13px; padding: 8px 14px; min-height: var(--tap); }
 
-.poster {
-  position: relative; z-index: 1;
-  max-width: 940px; margin: 0 auto;
-  padding: 26px 16px 40px;
-}
+.poster { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 24px 16px 36px; }
 
 /* ค่อย ๆ โผล่ตามลำดับด้วย CSS ล้วน ไม่ต้องรอ JS */
 .ig-head, .band, .ig-foot { animation: igIn .5s ease both; }
@@ -32,202 +43,218 @@
 @keyframes igIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
 /* -------------------------------------------------------------- หัวเรื่อง */
-.ig-head { text-align: center; margin-bottom: 28px; }
+.ig-head { text-align: center; margin-bottom: 22px; }
 .ig-eyebrow {
-  display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: .1em;
+  display: inline-block; font-family: var(--mono); font-size: 11.5px; letter-spacing: .1em;
   color: var(--brand); background: rgba(45, 212, 191, .1);
   border: 1px solid rgba(45, 212, 191, .32);
-  padding: 4px 13px; border-radius: 999px; margin-bottom: 12px;
+  padding: 3px 12px; border-radius: 999px; margin-bottom: 10px;
 }
 .ig-head h1 {
-  font-size: clamp(28px, 8vw, 46px); margin-bottom: 10px; letter-spacing: -.02em;
+  font-size: clamp(27px, 8vw, 44px); margin-bottom: 8px; letter-spacing: -.02em;
   background: linear-gradient(100deg, var(--brand), var(--brand-2) 45%, var(--accent));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-.ig-sub { margin: 0; font-size: 14.5px; color: var(--text-dim); line-height: 1.8; }
+.ig-sub { margin: 0; font-size: 14.5px; color: var(--text-dim); }
 .ig-sub b { color: var(--text); }
 
 /* ------------------------------------------------------------- แถบเนื้อหา */
 .band {
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: var(--radius); padding: 18px 16px; margin-bottom: 14px;
+  border-radius: var(--radius); padding: 16px 14px; margin-bottom: 12px;
   box-shadow: var(--shadow-soft);
 }
 .band--last { margin-bottom: 0; }
-.band__head { display: flex; align-items: center; gap: 11px; margin-bottom: 6px; }
+.band__head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
 .band__no {
   flex: none; display: grid; place-items: center;
-  width: 30px; height: 30px; border-radius: 9px;
-  font-family: var(--mono); font-size: 15px; font-weight: 800;
+  width: 28px; height: 28px; border-radius: 9px;
+  font-family: var(--mono); font-size: 14px; font-weight: 800;
   color: #04131a; background: linear-gradient(120deg, var(--brand), var(--brand-2));
 }
-.band__head h2 { margin: 0; font-size: clamp(18px, 5vw, 22px); }
-.band__lead { margin: 0 0 14px; font-size: 14px; color: var(--text-dim); }
+.band__head h2 { margin: 0; font-size: clamp(17px, 4.8vw, 21px); }
 
-/* --------------------------------------------------- 1 · โซ่ขั้นตอนปัญหา */
-.chain {
-  list-style: none; margin: 0 0 14px; padding: 0;
-  display: grid; gap: 8px;
+/* ------------------------------------------------- 1 · เส้นทาง 6 ขั้นตอน */
+.road {
+  list-style: none; margin: 0 0 12px; padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
 }
-.chain__item {
-  position: relative;
-  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+.road__stop {
+  display: grid; justify-items: center; gap: 8px; text-align: center;
+  padding: 14px 6px; border-radius: var(--radius-sm);
   background: var(--bg); border: 1px solid var(--line-soft);
-  border-left: 3px solid var(--line);
-  border-radius: var(--radius-sm); padding: 9px 12px;
+  color: var(--text-dim);
 }
-.chain__item b { font-size: 13.5px; font-weight: 700; }
-.chain__item span {
-  flex: none; font-family: var(--mono); font-size: 11px; color: var(--text-faint);
+.road__stop b { font-size: 12px; font-weight: 700; color: var(--text); line-height: 1.3; }
+/* ขั้นที่ทีมสั่งไม่ได้ — ใช้สีเดียวกันทั้งกลุ่มให้เห็นว่าเป็นพวกเดียวกัน */
+.road__stop--out {
+  border-color: rgba(251, 191, 36, .45); background: rgba(251, 191, 36, .07);
+  color: var(--warn);
 }
-/* ขั้นที่ทีมควบคุมไม่ได้ */
-.chain__item--out { border-left-color: var(--warn); background: rgba(251, 191, 36, .05); }
-.chain__item--out b { color: var(--warn); }
+.road__stop--out b { color: var(--warn); }
 
-.alarm {
-  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
-  padding: 14px 16px; border-radius: var(--radius-sm);
-  background: linear-gradient(100deg, rgba(251, 113, 133, .12), transparent 70%);
+.locked {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  background: linear-gradient(100deg, rgba(251, 113, 133, .12), transparent 72%);
   border: 1px solid rgba(251, 113, 133, .34); border-left-width: 4px;
 }
-.alarm b {
-  font-size: clamp(24px, 7vw, 32px); color: var(--danger); line-height: 1;
-  font-variant-numeric: tabular-nums;
+.ic--lock { width: 26px; height: 26px; color: var(--warn); }
+.locked span { flex: 1 1 150px; font-size: 13.5px; color: var(--text-dim); }
+.locked b { color: var(--warn); }
+.locked em {
+  font-style: normal; font-weight: 800; line-height: 1;
+  font-size: clamp(24px, 7vw, 30px); color: var(--danger);
 }
-.alarm span { flex: 1 1 220px; font-size: 13px; color: var(--text-dim); line-height: 1.65; }
-.alarm u { text-decoration: none; color: var(--warn); font-weight: 700; }
 
-/* ----------------------------------------------------------- 2 · แนวคิด */
-.idea { display: grid; gap: 8px; align-items: stretch; }
-.idea__card {
+/* ------------------------------------------------------ 2 · สมการภาพ */
+.eq { display: grid; gap: 6px; align-items: center; }
+.eq__box {
+  margin: 0; padding: 18px 12px; text-align: center;
+  display: grid; justify-items: center; gap: 5px;
   background: var(--bg); border: 1px solid var(--line);
-  border-radius: var(--radius-sm); padding: 15px 14px; text-align: center;
-  display: grid; gap: 5px; align-content: start;
+  border-radius: var(--radius-sm); color: var(--text-faint);
 }
-.idea__card--plan { border-color: rgba(45, 212, 191, .4); }
-.idea__card--out { border-color: rgba(167, 139, 250, .4); }
-.idea__icon { font-size: 30px; line-height: 1; }
-.idea__card b { font-size: 15.5px; }
-.idea__card p { margin: 0; font-size: 12.5px; color: var(--text-dim); line-height: 1.6; }
-.idea__where {
-  justify-self: center; margin-top: 4px;
-  font-family: var(--mono); font-size: 10.5px;
-  color: var(--text-faint); background: var(--surface-2);
-  border: 1px solid var(--line); padding: 2px 9px; border-radius: 999px;
+.eq__box b { font-size: 15px; color: var(--text); }
+.eq__box figcaption { font-size: 11.5px; color: var(--text-faint); }
+.eq__box--plan { border-color: rgba(45, 212, 191, .42); color: var(--brand); }
+.eq__box--plan figcaption { color: var(--brand); }
+.eq__box--out { border-color: rgba(167, 139, 250, .42); color: var(--accent); }
+.eq__box--out figcaption { color: var(--accent); }
+.eq__op {
+  justify-self: center; font-size: 24px; font-weight: 800;
+  color: var(--text-faint); line-height: 1;
 }
-.idea__where--srv { color: var(--brand); background: rgba(45, 212, 191, .1); border-color: rgba(45, 212, 191, .3); }
-.idea__where--ok  { color: var(--accent); background: rgba(167, 139, 250, .1); border-color: rgba(167, 139, 250, .3); }
-.idea__plus, .idea__eq {
-  justify-self: center; font-size: 22px; font-weight: 800; color: var(--text-faint); line-height: 1;
-}
-.idea__note {
-  margin: 14px 0 0; padding: 12px 14px; text-align: center;
-  font-size: 14px; color: var(--text-dim);
+.eq__note {
+  display: flex; align-items: center; justify-content: center; gap: 7px; flex-wrap: wrap;
+  margin: 12px 0 0; padding: 11px 14px; text-align: center;
+  font-size: 13.5px; color: var(--text-dim);
   background: rgba(45, 212, 191, .07); border: 1px solid rgba(45, 212, 191, .28);
   border-radius: var(--radius-sm);
 }
-.idea__note b { color: var(--brand); }
+.eq__note b { color: var(--brand); }
+.eq__note .ic { color: var(--danger); }
 
-/* ---------------------------------------------------------- 3 · ผลลัพธ์ */
-.stats { display: grid; gap: 10px; }
-.stat {
-  background: var(--bg); border: 1px solid var(--line);
-  border-radius: var(--radius-sm); padding: 14px; text-align: center;
+/* ---------------------------------------------------- 3 · แท่งเทียบเวลา */
+.gauge { display: grid; gap: 9px; margin-bottom: 12px; }
+.gauge__row { display: grid; grid-template-columns: 84px 1fr auto; align-items: center; gap: 9px; }
+.gauge__tag {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; color: var(--text-faint);
 }
-.stat b {
-  display: block; font-size: clamp(22px, 6.4vw, 28px); line-height: 1.25;
+.gauge__track {
+  height: 16px; border-radius: 999px; overflow: hidden;
+  background: var(--bg); border: 1px solid var(--line-soft);
+}
+.gauge__fill { display: block; height: 100%; border-radius: 999px; }
+/* 7 วัน กับ 3 นาที ต่างกันหลายพันเท่า วาดตามสัดส่วนจริงจะมองไม่เห็นเลย
+   จึงให้แท่งใหม่สั้นที่สุดเท่าที่ยังพอเห็น แล้วติดตัวเลขจริงกำกับไว้ */
+.gauge__fill--old { width: 100%; background: linear-gradient(90deg, #7f1d3a, var(--danger)); }
+.gauge__fill--new { width: 4%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); }
+.gauge__val { font-size: 14px; font-weight: 800; min-width: 58px; text-align: right; }
+.gauge__val--old { color: var(--danger); }
+.gauge__val--new { color: var(--brand); }
+
+.wins { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.win {
+  display: grid; justify-items: center; gap: 4px; text-align: center;
+  padding: 15px 8px; border-radius: var(--radius-sm);
+  background: var(--bg); border: 1px solid var(--line); color: var(--brand);
+}
+.win b {
+  font-size: clamp(24px, 7vw, 30px); line-height: 1.1;
   background: linear-gradient(120deg, var(--brand), var(--brand-2));
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
-/* ตัวเลขใช้ไล่เฉดผ่าน background-clip: text ซึ่งลูกจะสืบทอด color: transparent มา
-   ถ้าใส่ opacity ให้ลูก มันจะกลายเป็นเลเยอร์แยกแล้วถูก clip กับพื้นหลังเปล่า → หายไปเลย
-   จึงต้องกำหนดสีทึบให้ลูกเองด้วย -webkit-text-fill-color */
-.stat b i {
-  font-style: normal;
+.win span { font-size: 11.5px; color: var(--text-faint); line-height: 1.4; }
+
+/* ------------------------------------------------------- 4 · ตารางเทียบ */
+.mx { display: grid; gap: 6px; }
+.mx__head, .mx__row {
+  display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 6px; align-items: center;
+}
+.mx__head b {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: 12.5px; color: var(--text-faint);
+  padding-bottom: 2px;
+}
+.mx__head .mx__new { color: var(--brand); }
+.mx__k { font-size: 12.5px; color: var(--text-dim); padding-left: 2px; }
+.mx__v {
+  text-align: center; font-size: 12.5px; font-weight: 700;
+  padding: 9px 4px; border-radius: 9px;
+  background: var(--bg); border: 1px solid var(--line-soft);
+}
+.mx__v--bad  { color: var(--danger); border-color: rgba(251, 113, 133, .28); }
+.mx__v--good { color: var(--brand);  border-color: rgba(45, 212, 191, .3); background: rgba(45, 212, 191, .07); }
+
+/* -------------------------------------------------------- 5 · ได้ / เสีย */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.tile {
+  display: grid; justify-items: center; gap: 9px; text-align: center;
+  padding: 16px 10px; border-radius: var(--radius-sm);
+  background: var(--bg); border: 1px solid var(--line);
+}
+.tile b { font-size: 12.5px; line-height: 1.4; color: var(--text); }
+.tile--good { border-color: rgba(74, 222, 128, .34); color: var(--good); }
+.tile--bad  { border-color: rgba(251, 191, 36, .34); color: var(--warn); }
+
+/* ------------------------------------------------------ 6 · เหมาะ/ไม่เหมาะ */
+.fit { display: grid; gap: 10px; }
+.fit__group { padding: 12px; border-radius: var(--radius-sm); background: var(--bg); border: 1px solid var(--line); }
+.fit__group--yes { border-color: rgba(74, 222, 128, .34); }
+.fit__group--no  { border-color: rgba(251, 113, 133, .3); }
+.fit__label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 800; margin-bottom: 10px;
+}
+.fit__group--yes .fit__label { color: var(--good); }
+.fit__group--no .fit__label { color: var(--danger); }
+.fit__items { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.fit__item {
+  display: grid; justify-items: center; gap: 7px; text-align: center;
   color: var(--text-faint);
-  -webkit-text-fill-color: var(--text-faint);
-  padding: 0 2px;
 }
-.stat span { display: block; margin-top: 5px; font-size: 12.5px; color: var(--text-faint); line-height: 1.55; }
-
-/* --------------------------------------------------------- 4 · เทียบกัน */
-.vs { display: grid; gap: 10px; }
-.vs__col {
-  background: var(--bg); border: 1px solid var(--line);
-  border-radius: var(--radius-sm); padding: 15px;
-}
-.vs__col--new { border-color: rgba(45, 212, 191, .38); }
-.vs__col h3 { font-size: 15.5px; margin-bottom: 9px; }
-.vs__col ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; color: var(--text-dim); }
-.vs__col--new ul { color: var(--text); }
-
-/* ------------------------------------------------------- 5 · ได้ / เสีย */
-.pros { display: grid; gap: 10px; }
-.pros__col {
-  background: var(--bg); border: 1px solid var(--line);
-  border-left-width: 3px; border-radius: var(--radius-sm); padding: 15px;
-}
-.pros__col--good { border-left-color: var(--good); }
-.pros__col--bad  { border-left-color: var(--warn); }
-.pros__col h3 { font-size: 15.5px; margin-bottom: 9px; }
-.pros__col ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 13px; color: var(--text-dim); }
-.pros__col em { font-style: normal; color: var(--warn); font-weight: 700; }
-
-/* ----------------------------------------------------- 6 · ใช้เมื่อไหร่ */
-.when { display: grid; gap: 10px; }
-.when__yes, .when__no {
-  background: var(--bg); border: 1px solid var(--line);
-  border-radius: var(--radius-sm); padding: 14px;
-}
-.when__yes { border-color: rgba(74, 222, 128, .34); }
-.when__no  { border-color: rgba(251, 113, 133, .3); }
-.when b { display: block; font-size: 14.5px; margin-bottom: 4px; }
-.when__yes b { color: var(--good); }
-.when__no b  { color: var(--danger); }
-.when p { margin: 0; font-size: 13px; color: var(--text-dim); line-height: 1.7; }
-.when__mix {
-  margin: 12px 0 0; font-size: 13.5px; color: var(--text-dim); text-align: center;
-}
-.when__mix b { color: var(--accent); }
+.fit__item b { font-size: 12px; color: var(--text); }
+.fit__group--yes .fit__item { color: var(--good); }
+.fit__group--no .fit__item { color: var(--danger); }
 
 /* -------------------------------------------------------------- ปิดท้าย */
 .ig-foot {
-  margin-top: 22px; padding: 22px 18px; text-align: center;
+  margin-top: 18px; padding: 18px 16px; text-align: center;
   background: linear-gradient(140deg, rgba(45, 212, 191, .1), rgba(167, 139, 250, .07));
   border: 1px solid rgba(45, 212, 191, .28); border-radius: var(--radius);
 }
-.ig-foot p { margin: 0 0 14px; font-size: 14px; color: var(--text-dim); }
-.ig-foot b { color: var(--text); }
-.ig-foot__hint { margin: 14px 0 0 !important; font-size: 12px; color: var(--text-faint); }
+.ig-foot .btn { width: 100%; justify-content: center; }
+.ig-foot__hint { margin: 12px 0 0; font-size: 11.5px; color: var(--text-faint); }
 .ig-foot__print { display: none; }
 
 /* =====================================================================
-   ≥ 640px
+   ≥ 560px
    ===================================================================== */
-@media (min-width: 640px) {
-  .poster { padding: 34px 24px 48px; }
-  .band { padding: 22px 20px; }
-  .chain { grid-template-columns: 1fr 1fr; }
-  .idea { grid-template-columns: 1fr 24px 1fr; }
-  .idea__card--out { grid-column: 1 / -1; }
-  .idea__eq { display: none; }
-  .stats { grid-template-columns: repeat(3, 1fr); }
-  .vs, .pros, .when { grid-template-columns: 1fr 1fr; }
+@media (min-width: 560px) {
+  .road { grid-template-columns: repeat(6, 1fr); }
+  .road__stop b { font-size: 11.5px; }
+  .eq { grid-template-columns: 1fr 22px 1fr 22px 1fr; }
+  .tiles { grid-template-columns: repeat(3, 1fr); }
+  .fit { grid-template-columns: 1fr 1fr; }
+  .ig-foot .btn { width: auto; }
 }
 
 /* =====================================================================
    ≥ 900px
    ===================================================================== */
 @media (min-width: 900px) {
-  .poster { padding: 44px 32px 56px; }
-  .ig-head { margin-bottom: 34px; }
-  .band { padding: 24px 26px; margin-bottom: 16px; }
-  .chain { grid-template-columns: repeat(3, 1fr); }
-  /* จอกว้างพอให้เรียง กล่องเลโก้ + แบบแปลน = หน้าจอ ในบรรทัดเดียว */
-  .idea { grid-template-columns: 1fr 26px 1fr 26px 1fr; }
-  .idea__card--out { grid-column: auto; }
-  .idea__eq { display: block; }
+  .poster { padding: 40px 32px 48px; }
+  .ig-head { margin-bottom: 28px; }
+  .band { padding: 22px 24px; margin-bottom: 14px; }
   .ig-sub { font-size: 16px; }
+  .road__stop { padding: 15px 8px; }
+  .road__stop b { font-size: 12.5px; }
+  .gauge__row { grid-template-columns: 104px 1fr auto; }
+  .gauge__track { height: 20px; }
+  .mx__k, .mx__v, .mx__head b { font-size: 13.5px; }
+  .tile b { font-size: 13px; }
 }
 
 /* =====================================================================
@@ -237,52 +264,53 @@
 @media print {
   @page { margin: 12mm; }
 
-  .nav, .ig-foot__hint { display: none !important; }
+  .nav, .ig-foot__hint, .btn { display: none !important; }
   .ig-head, .band, .ig-foot { animation: none !important; }
 
-  html, body, .ig-body {
-    background: #fff !important; color: #14181f !important;
-  }
+  html, body, .ig-body { background: #fff !important; color: #14181f !important; }
   body::before { display: none !important; }   /* ลายจุดพื้นหลัง */
-
   .poster { max-width: none; padding: 0; }
 
-  .band, .ig-foot, .stat, .vs__col, .pros__col, .when__yes, .when__no,
-  .chain__item, .idea__card, .idea__note, .alarm {
+  .band, .ig-foot, .road__stop, .eq__box, .eq__note, .locked,
+  .gauge__track, .win, .mx__v, .tile, .fit__group {
     background: #fff !important;
     border-color: #c8cfda !important;
     box-shadow: none !important;
     break-inside: avoid; page-break-inside: avoid;
   }
-  .band { margin-bottom: 8mm; }
+  .band { margin-bottom: 7mm; }
 
-  /* ข้อความไล่เฉดสีพิมพ์ออกมาไม่ติด ต้องเปลี่ยนเป็นสีทึบ */
-  .ig-head h1, .stat b {
-    background: none !important; -webkit-text-fill-color: currentColor !important;
+  /* ข้อความไล่เฉดพิมพ์ออกมาไม่ติด ต้องเปลี่ยนเป็นสีทึบ */
+  .ig-head h1, .win b {
+    background: none !important;
+    -webkit-text-fill-color: currentColor !important;
     color: #0f766e !important;
   }
   .band__no { background: #0f766e !important; color: #fff !important; }
 
-  h1, h2, h3, b, u { color: #14181f !important; }
-  p, li, span, .ig-sub, .band__lead { color: #3d4757 !important; }
-  .chain__item span { color: #6b7686 !important; }
+  h1, h2, b { color: #14181f !important; }
+  p, span, figcaption, .ig-sub, .mx__k { color: #3d4757 !important; }
 
-  .chain__item--out { background: #fff8e6 !important; border-left-color: #b45309 !important; }
-  .chain__item--out b { color: #b45309 !important; }
-  .alarm { border-color: #dc2626 !important; }
-  .alarm b { color: #dc2626 !important; }
-  .alarm u { color: #b45309 !important; }
-  .when__yes b { color: #15803d !important; }
-  .when__no b { color: #dc2626 !important; }
-  .pros__col--good { border-left-color: #15803d !important; }
-  .pros__col--bad { border-left-color: #b45309 !important; }
-  .idea__note b, .when__mix b { color: #0f766e !important; }
-  /* ป้ายเล็กมีพื้นหลังเข้มของตัวเอง ต้องล้างด้วย ไม่งั้นพิมพ์ออกมาเป็นแถบดำ */
-  .idea__where {
-    color: #0f766e !important; background: #fff !important; border-color: #99b3ae !important;
-  }
+  /* แท่งเทียบเวลาต้องพิมพ์ให้ติด ไม่งั้นกราฟจะกลายเป็นกล่องเปล่า */
+  .gauge__fill { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .gauge__fill--old { background: #dc2626 !important; }
+  .gauge__fill--new { background: #0f766e !important; }
+  .gauge__val--old { color: #dc2626 !important; }
+  .gauge__val--new { color: #0f766e !important; }
 
-  /* ปุ่มกดไม่มีประโยชน์บนกระดาษ — ซ่อนแล้วใส่ข้อความบอกทางแทน */
-  .btn { display: none !important; }
+  .road__stop { color: #3d4757 !important; }
+  .road__stop--out, .road__stop--out b { color: #b45309 !important; }
+  .road__stop--out { border-color: #b45309 !important; }
+  .locked { border-color: #dc2626 !important; }
+  .locked em { color: #dc2626 !important; }
+  .locked b, .ic--lock { color: #b45309 !important; }
+  .eq__box--plan, .eq__box--plan figcaption, .eq__note b { color: #0f766e !important; }
+  .eq__box--out, .eq__box--out figcaption { color: #6d28d9 !important; }
+  .eq__note .ic { color: #dc2626 !important; }
+  .mx__v--bad, .fit__group--no .fit__label, .fit__group--no .fit__item { color: #dc2626 !important; }
+  .mx__v--good, .mx__head .mx__new { color: #0f766e !important; }
+  .tile--good, .fit__group--yes .fit__label, .fit__group--yes .fit__item { color: #15803d !important; }
+  .tile--bad { color: #b45309 !important; }
+  .tile b, .fit__item b, .road__stop b { color: #14181f !important; }
   .ig-foot__print { display: block !important; margin: 0 !important; font-size: 12px; color: #3d4757 !important; }
 }

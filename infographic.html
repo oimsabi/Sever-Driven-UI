@@ -4,198 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Server-Driven UI สรุปใน 1 หน้า — Infographic</title>
-<meta name="description" content="อินโฟกราฟิกสรุป Server-Driven UI ใน 1 หน้า: ปัญหา แนวคิด ผลลัพธ์ ข้อดีข้อเสีย และควรใช้เมื่อไหร่ อ่านจบในหนึ่งนาที">
+<meta name="description" content="อินโฟกราฟิกสรุป Server-Driven UI ใน 1 หน้า เล่าด้วยภาพเป็นหลัก อ่านนิดเดียวเข้าใจครบ">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="stylesheet" href="assets/css/infographic.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
 </head>
 <body class="ig-body">
 
+<!-- ===== คลังไอคอน: วาดเป็นเส้นด้วย currentColor จึงคมทุกขนาดและพิมพ์ออกกระดาษได้ ===== -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="i-design"><path d="M4 20.5l5-1.2L20 8.3a2.3 2.3 0 0 0-3.3-3.3L5.2 16z"/><path d="M15.5 6.2l3.3 3.3"/></g>
+    <g id="i-code"><path d="M9 7.5 4 12l5 4.5"/><path d="M15 7.5 20 12l-5 4.5"/><path d="M13.2 6.2 10.8 17.8"/></g>
+    <g id="i-test"><rect x="5" y="4.5" width="14" height="16.5" rx="2.2"/><path d="M9.2 4.5V3.4h5.6v1.1"/><path d="M8.6 11.6l2 2 4-4"/><path d="M8.6 17h6.8"/></g>
+    <g id="i-store"><path d="M4.5 9.5h15V20h-15z"/><path d="M3 9.5 5.2 5h13.6L21 9.5"/><path d="M9.5 20v-5.5h5V20"/></g>
+    <g id="i-rocket"><path d="M12 2.5c2.9 2.5 4.3 5.7 4.3 8.6L12 14.6l-4.3-3.5c0-2.9 1.4-6.1 4.3-8.6z"/><circle cx="12" cy="9" r="1.7"/><path d="M7.7 12.6 5.3 18.3l3.5-1.7M16.3 12.6l2.4 5.7-3.5-1.7"/><path d="M12 17.4v3.2"/></g>
+    <g id="i-update"><rect x="6.5" y="2.5" width="11" height="19" rx="3"/><path d="M12 7.2v7.6"/><path d="M9.2 12l2.8 2.8L14.8 12"/></g>
+    <g id="i-lock"><rect x="4.5" y="10" width="15" height="10.5" rx="2.2"/><path d="M8 10V7.4a4 4 0 0 1 8 0V10"/><path d="M12 14v3"/></g>
+    <g id="i-brick"><rect x="8" y="3" width="8.4" height="8.4" rx="1.8"/><rect x="2.6" y="12.6" width="8.4" height="8.4" rx="1.8"/><rect x="13.4" y="12.6" width="8.4" height="8.4" rx="1.8"/></g>
+    <g id="i-plan"><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><circle cx="8.6" cy="12.2" r="1"/><path d="M11.2 12.2h5"/><circle cx="8.6" cy="16.4" r="1"/><path d="M11.2 16.4h5"/></g>
+    <g id="i-phone"><rect x="6.5" y="2" width="11" height="20" rx="3"/><path d="M10.4 4.6h3.2"/><rect x="8.6" y="7.2" width="6.8" height="9" rx="1.2"/><path d="M10.4 19.4h3.2"/></g>
+    <g id="i-clock"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.6 2.2"/></g>
+    <g id="i-bolt"><path d="M13.8 2.5 5.8 13.6h4.7L10 21.5l8-11.2h-4.7z"/></g>
+    <g id="i-devices"><rect x="2.5" y="4.8" width="11.5" height="8.6" rx="1.6"/><path d="M8.2 13.4V17M5.6 17h5.2"/><rect x="16" y="7.8" width="5.5" height="12.2" rx="1.6"/><path d="M18 18.4h1.6"/></g>
+    <g id="i-undo"><path d="M4 9.2h9.2a5.6 5.6 0 1 1 0 11.2H7.8"/><path d="M4 9.2 8.2 5M4 9.2l4.2 4.2"/></g>
+    <g id="i-coins"><ellipse cx="12" cy="6.6" rx="7.2" ry="3.1"/><path d="M4.8 6.6v5c0 1.7 3.2 3.1 7.2 3.1s7.2-1.4 7.2-3.1v-5"/><path d="M4.8 11.6v5c0 1.7 3.2 3.1 7.2 3.1s7.2-1.4 7.2-3.1v-5"/></g>
+    <g id="i-alert"><path d="M12 3.4 21.4 20.6H2.6z"/><path d="M12 9.8v4.6"/><circle cx="12" cy="17.5" r="1.05"/></g>
+    <g id="i-newpiece"><rect x="3.5" y="3.5" width="17" height="17" rx="3.4"/><path d="M12 8.4v7.2M8.4 12h7.2"/></g>
+    <g id="i-home"><path d="M3.4 11.2 12 3.6l8.6 7.6"/><path d="M6.2 9.4V20.4h11.6V9.4"/><path d="M10 20.4v-5h4v5"/></g>
+    <g id="i-tag"><path d="M2.8 10.8V3.4h7.4L21.2 14.4 14.4 21.2z"/><circle cx="7" cy="7.6" r="1.5"/></g>
+    <g id="i-feed"><rect x="3.4" y="3.6" width="17.2" height="5.4" rx="1.6"/><rect x="3.4" y="11.4" width="17.2" height="3.6" rx="1.3"/><rect x="3.4" y="17" width="10.4" height="3.6" rx="1.3"/></g>
+    <g id="i-camera"><rect x="2.6" y="6.6" width="18.8" height="13.4" rx="2.6"/><circle cx="12" cy="13.3" r="3.8"/><path d="M8.8 6.6 10.4 3.9h3.2l1.6 2.7"/></g>
+    <g id="i-map"><path d="M9 3.6 3 6.2v14.2L9 17.8l6 2.6 6-2.6V3.4l-6 2.6z"/><path d="M9 3.6v14.2M15 6v14.4"/></g>
+    <g id="i-game"><rect x="2.2" y="7.2" width="19.6" height="10.4" rx="5.2"/><path d="M7 10.4v4.2M4.9 12.5h4.2"/><circle cx="15.6" cy="11.4" r="1.1"/><circle cx="18.2" cy="14" r="1.1"/></g>
+    <g id="i-server"><rect x="3.4" y="3.8" width="17.2" height="6.2" rx="1.9"/><rect x="3.4" y="14" width="17.2" height="6.2" rx="1.9"/><path d="M6.8 6.9h1.2M6.8 17.1h1.2"/><path d="M12 10v4"/></g>
+    <g id="i-check"><path d="M4.6 12.6 9.4 17.4 19.4 7"/></g>
+    <g id="i-cross"><path d="M6 6l12 12M18 6 6 18"/></g>
+  </defs>
+</svg>
+
 <header class="nav nav--slim">
   <a class="nav__brand" href="index.html">
     <span class="nav__logo">🧩</span>
     <span>Server-Driven UI</span>
   </a>
-  <a class="btn btn--ghost nav--slim__cta" href="index.html">← ดูหน้าเต็ม (มีแอนิเมชัน + ลองเล่นได้)</a>
+  <a class="btn btn--ghost nav--slim__cta" href="index.html">← หน้าเต็ม</a>
 </header>
 
 <main class="poster">
 
   <!-- ---------- หัวเรื่อง ---------- -->
   <div class="ig-head">
-    <span class="ig-eyebrow">สรุปใน 1 หน้า</span>
+    <span class="ig-eyebrow">สรุป 1 หน้า</span>
     <h1>Server-Driven UI</h1>
-    <p class="ig-sub">หน้าตาแอป <b>ไม่ได้ฝังอยู่ในแอป</b> แต่ถูก <b>ส่งมาจากเซิร์ฟเวอร์</b><br>
-      จึงเปลี่ยนหน้าจอผู้ใช้ได้โดยไม่ต้องปล่อยแอปเวอร์ชันใหม่</p>
+    <p class="ig-sub">หน้าตาแอป ไม่ได้อยู่ในแอป · <b>มาจากเซิร์ฟเวอร์</b></p>
   </div>
 
   <!-- ---------- 1 · ปัญหา ---------- -->
   <section class="band">
-    <div class="band__head">
-      <span class="band__no">1</span>
-      <h2>ปัญหา</h2>
-    </div>
-    <p class="band__lead">“ขอเปลี่ยนคำบนปุ่มหน่อย” — คำเดียว แต่ต้องเดินครบทุกขั้น</p>
+    <div class="band__head"><span class="band__no">1</span><h2>แก้คำเดียว = รอ 7 วัน</h2></div>
 
-    <ol class="chain">
-      <li class="chain__item"><b>ออกแบบ</b><span>ครึ่งวัน</span></li>
-      <li class="chain__item"><b>เขียนโค้ดในแอป</b><span>1 วัน</span></li>
-      <li class="chain__item"><b>ทดสอบ</b><span>1 วัน</span></li>
-      <li class="chain__item chain__item--out"><b>รอสโตร์ตรวจ</b><span>1–3 วัน</span></li>
-      <li class="chain__item chain__item--out"><b>ปล่อยเวอร์ชันใหม่</b><span>ทันที</span></li>
-      <li class="chain__item chain__item--out"><b>รอผู้ใช้กดอัปเดต</b><span>3 วัน–∞</span></li>
+    <ol class="road">
+      <li class="road__stop">
+        <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-design"/></svg>
+        <b>ออกแบบ</b>
+      </li>
+      <li class="road__stop">
+        <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-code"/></svg>
+        <b>เขียนโค้ด</b>
+      </li>
+      <li class="road__stop">
+        <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-test"/></svg>
+        <b>ทดสอบ</b>
+      </li>
+      <li class="road__stop road__stop--out">
+        <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-store"/></svg>
+        <b>รอสโตร์</b>
+      </li>
+      <li class="road__stop road__stop--out">
+        <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-rocket"/></svg>
+        <b>ปล่อยแอป</b>
+      </li>
+      <li class="road__stop road__stop--out">
+        <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-update"/></svg>
+        <b>รอผู้ใช้อัปเดต</b>
+      </li>
     </ol>
 
-    <div class="alarm">
-      <b>≈ 7 วัน</b>
-      <span>และ <u>3 ขั้นสุดท้าย (สีส้ม) อยู่นอกการควบคุมของทีม</u> —
-        ต้องรอสโตร์ตรวจ และรอผู้ใช้กดอัปเดตเอง ซึ่งบางคนไม่กดเลยตลอดไป</span>
+    <div class="locked">
+      <svg class="ic ic--lock" viewBox="0 0 24 24"><use href="#i-lock"/></svg>
+      <span>3 ขั้นสีส้ม — <b>คุณสั่งไม่ได้</b></span>
+      <em>7 วัน</em>
     </div>
   </section>
 
   <!-- ---------- 2 · แนวคิด ---------- -->
   <section class="band">
-    <div class="band__head">
-      <span class="band__no">2</span>
-      <h2>แนวคิด</h2>
-    </div>
-    <p class="band__lead">แยก “หน้าตา” ออกจาก “ตัวแอป” — คิดเป็นเลโก้</p>
+    <div class="band__head"><span class="band__no">2</span><h2>แยกหน้าตาออกจากตัวแอป</h2></div>
 
-    <div class="idea">
-      <div class="idea__card">
-        <span class="idea__icon" aria-hidden="true">🧱</span>
-        <b>กล่องเลโก้</b>
-        <p>แอปมีชิ้นส่วนเตรียมไว้แล้ว<br>ปุ่ม · รูป · ป้าย · ดาว · การ์ด</p>
-        <span class="idea__where">อยู่ในแอป</span>
-      </div>
-      <span class="idea__plus" aria-hidden="true">+</span>
-      <div class="idea__card idea__card--plan">
-        <span class="idea__icon" aria-hidden="true">📋</span>
+    <div class="eq">
+      <figure class="eq__box">
+        <svg class="ic ic--xl" viewBox="0 0 24 24"><use href="#i-brick"/></svg>
+        <b>ชิ้นส่วน</b>
+        <figcaption>อยู่ในแอปแล้ว</figcaption>
+      </figure>
+
+      <span class="eq__op" aria-hidden="true">+</span>
+
+      <figure class="eq__box eq__box--plan">
+        <svg class="ic ic--xl" viewBox="0 0 24 24"><use href="#i-plan"/></svg>
         <b>แบบแปลน</b>
-        <p>บอกว่าหยิบชิ้นไหน<br>เรียงยังไง เขียนอะไร</p>
-        <span class="idea__where idea__where--srv">มาจากเซิร์ฟเวอร์</span>
-      </div>
-      <span class="idea__eq" aria-hidden="true">=</span>
-      <div class="idea__card idea__card--out">
-        <span class="idea__icon" aria-hidden="true">📱</span>
+        <figcaption>มาจากเซิร์ฟเวอร์</figcaption>
+      </figure>
+
+      <span class="eq__op" aria-hidden="true">=</span>
+
+      <figure class="eq__box eq__box--out">
+        <svg class="ic ic--xl" viewBox="0 0 24 24"><use href="#i-phone"/></svg>
         <b>หน้าจอ</b>
-        <p>แอปประกอบตามแบบแปลน<br>ด้วยชิ้นส่วนที่มีอยู่</p>
-        <span class="idea__where idea__where--ok">ผู้ใช้เห็นทันที</span>
-      </div>
+        <figcaption>ที่ผู้ใช้เห็น</figcaption>
+      </figure>
     </div>
 
-    <p class="idea__note">
-      เปลี่ยนหน้าจอ = <b>ส่งแบบแปลนใหม่</b> · ไม่ต้องส่งกล่องเลโก้ใหม่ = <b>ไม่ต้องอัปเดตแอป</b>
+    <p class="eq__note">
+      ส่ง<b>แบบแปลน</b>ใหม่ → หน้าจอเปลี่ยน
+      <svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-cross"/></svg> ไม่ต้องอัปเดตแอป
     </p>
   </section>
 
   <!-- ---------- 3 · ผลลัพธ์ ---------- -->
   <section class="band">
-    <div class="band__head">
-      <span class="band__no">3</span>
-      <h2>ผลลัพธ์</h2>
+    <div class="band__head"><span class="band__no">3</span><h2>เร็วขึ้นแค่ไหน</h2></div>
+
+    <div class="gauge">
+      <div class="gauge__row">
+        <span class="gauge__tag"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-clock"/></svg> แบบเดิม</span>
+        <span class="gauge__track"><i class="gauge__fill gauge__fill--old"></i></span>
+        <b class="gauge__val gauge__val--old">7 วัน</b>
+      </div>
+      <div class="gauge__row">
+        <span class="gauge__tag"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-bolt"/></svg> แบบใหม่</span>
+        <span class="gauge__track"><i class="gauge__fill gauge__fill--new"></i></span>
+        <b class="gauge__val gauge__val--new">3 นาที</b>
+      </div>
     </div>
-    <div class="stats">
-      <div class="stat">
-        <b>7 วัน <i>→</i> 3 นาที</b>
-        <span>เวลาที่ใช้เปลี่ยนหน้าจอหนึ่งครั้ง</span>
+
+    <div class="wins">
+      <div class="win">
+        <svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-update"/></svg>
+        <b>0</b><span>ครั้งที่อัปเดตแอป</span>
       </div>
-      <div class="stat">
-        <b>0</b>
-        <span>ครั้งที่ต้องปล่อยแอปเวอร์ชันใหม่</span>
-      </div>
-      <div class="stat">
-        <b>1</b>
-        <span>แบบแปลน ใช้ได้ทั้ง iOS · Android · เว็บ</span>
+      <div class="win">
+        <svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-devices"/></svg>
+        <b>1</b><span>ชุด ใช้ได้ทุกเครื่อง</span>
       </div>
     </div>
   </section>
 
   <!-- ---------- 4 · เทียบกัน ---------- -->
   <section class="band">
-    <div class="band__head">
-      <span class="band__no">4</span>
-      <h2>เทียบกัน</h2>
-    </div>
-    <div class="vs">
-      <div class="vs__col">
-        <h3>📱 แบบเดิม</h3>
-        <ul>
-          <li>หน้าตาถูกเย็บติดไปกับตัวแอป</li>
-          <li>แก้หน้าตา = ปล่อยแอปเวอร์ชันใหม่</li>
-          <li>iOS / Android / เว็บ ต้องแก้แยกกัน</li>
-          <li>ผู้ใช้ที่ไม่อัปเดต เห็นของเก่าตลอดไป</li>
-        </ul>
+    <div class="band__head"><span class="band__no">4</span><h2>ต่างกันตรงไหน</h2></div>
+
+    <div class="mx">
+      <div class="mx__head">
+        <span></span>
+        <b><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-phone"/></svg> แบบเดิม</b>
+        <b class="mx__new"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-server"/></svg> แบบใหม่</b>
       </div>
-      <div class="vs__col vs__col--new">
-        <h3>🛰️ Server-Driven UI</h3>
-        <ul>
-          <li>หน้าตามาจากเซิร์ฟเวอร์ตอนเปิดแอป</li>
-          <li>แก้หน้าตา = ส่งแบบแปลนใหม่</li>
-          <li>แก้ที่เดียว เปลี่ยนพร้อมกันทุกแพลตฟอร์ม</li>
-          <li>ทุกคนเห็นของใหม่ในการเปิดแอปครั้งถัดไป</li>
-        </ul>
+
+      <div class="mx__row">
+        <span class="mx__k">หน้าตาเก็บที่</span>
+        <span class="mx__v mx__v--bad">ในตัวแอป</span>
+        <span class="mx__v mx__v--good">เซิร์ฟเวอร์</span>
+      </div>
+      <div class="mx__row">
+        <span class="mx__k">แก้ 1 คำ</span>
+        <span class="mx__v mx__v--bad">7 วัน</span>
+        <span class="mx__v mx__v--good">3 นาที</span>
+      </div>
+      <div class="mx__row">
+        <span class="mx__k">iOS · Android · เว็บ</span>
+        <span class="mx__v mx__v--bad">แก้ 3 ที่</span>
+        <span class="mx__v mx__v--good">แก้ 1 ที่</span>
+      </div>
+      <div class="mx__row">
+        <span class="mx__k">คนไม่กดอัปเดต</span>
+        <span class="mx__v mx__v--bad">เห็นของเก่า</span>
+        <span class="mx__v mx__v--good">เห็นของใหม่</span>
       </div>
     </div>
   </section>
 
   <!-- ---------- 5 · ได้ / เสีย ---------- -->
   <section class="band">
-    <div class="band__head">
-      <span class="band__no">5</span>
-      <h2>ได้อะไร / เสียอะไร</h2>
-    </div>
-    <div class="pros">
-      <div class="pros__col pros__col--good">
-        <h3>✅ ได้</h3>
-        <ul>
-          <li>เปลี่ยนหน้าจอได้ในไม่กี่นาที</li>
-          <li>ทุกแพลตฟอร์มเหมือนกันเป๊ะ</li>
-          <li>ทดลอง A/B และย้อนกลับได้เร็ว</li>
-          <li>ทีมธุรกิจแก้เองได้ ไม่ต้องรอคิวทีมแอป</li>
-        </ul>
-      </div>
-      <div class="pros__col pros__col--bad">
-        <h3>⚠️ เสีย</h3>
-        <ul>
-          <li>ต้องลงทุนสร้างระบบพื้นฐานก่อน</li>
-          <li>พลาดครั้งเดียวกระทบผู้ใช้ทุกคนทันที</li>
-          <li>ชิ้นส่วน<em>ใหม่</em> ยังต้องอัปเดตแอปเหมือนเดิม</li>
-          <li>ต้องมีเน็ต + แผนสำรองเวลาโหลดไม่ได้</li>
-        </ul>
-      </div>
+    <div class="band__head"><span class="band__no">5</span><h2>ได้ / เสีย</h2></div>
+
+    <div class="tiles">
+      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-bolt"/></svg><b>เปลี่ยนได้ทันที</b></div>
+      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-devices"/></svg><b>ทุกเครื่องเหมือนกัน</b></div>
+      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-undo"/></svg><b>ย้อนกลับง่าย</b></div>
+
+      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-coins"/></svg><b>ต้องลงทุนสร้างก่อน</b></div>
+      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-alert"/></svg><b>พลาดครั้งเดียว กระทบทุกคน</b></div>
+      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-newpiece"/></svg><b>ชิ้นส่วนใหม่ ยังต้องอัปเดตแอป</b></div>
     </div>
   </section>
 
-  <!-- ---------- 6 · ใช้เมื่อไหร่ ---------- -->
+  <!-- ---------- 6 · ใช้กับหน้าไหน ---------- -->
   <section class="band band--last">
-    <div class="band__head">
-      <span class="band__no">6</span>
-      <h2>ควรใช้เมื่อไหร่</h2>
-    </div>
-    <div class="when">
-      <div class="when__yes">
-        <b>คุ้ม</b>
-        <p>หน้าที่เปลี่ยนบ่อยตามธุรกิจ (หน้าแรก · โปรโมชัน · แคมเปญ) ·
-           มีหลายแพลตฟอร์มที่ต้องเหมือนกัน · อยากทดลองบ่อยจนรอบปล่อยแอปตามไม่ทัน</p>
+    <div class="band__head"><span class="band__no">6</span><h2>ใช้กับหน้าไหน</h2></div>
+
+    <div class="fit">
+      <div class="fit__group fit__group--yes">
+        <span class="fit__label"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-check"/></svg> เหมาะ</span>
+        <div class="fit__items">
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-home"/></svg><b>หน้าแรก</b></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-tag"/></svg><b>โปรโมชัน</b></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-feed"/></svg><b>ฟีด</b></div>
+        </div>
       </div>
-      <div class="when__no">
-        <b>ไม่คุ้ม</b>
-        <p>แอปเล็ก ทีมเดียว · หน้าจอนิ่ง ไม่ค่อยแก้ ·
-           หน้าที่ interactive สูงอย่างกล้อง แผนที่ เกม</p>
+
+      <div class="fit__group fit__group--no">
+        <span class="fit__label"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-cross"/></svg> ไม่เหมาะ</span>
+        <div class="fit__items">
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-camera"/></svg><b>กล้อง</b></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-map"/></svg><b>แผนที่</b></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-game"/></svg><b>เกม</b></div>
+        </div>
       </div>
     </div>
-    <p class="when__mix">
-      ที่ใช้กันจริงคือ <b>ผสมกัน</b> — ทำแบบนี้เฉพาะหน้าจอที่เปลี่ยนบ่อย ส่วนหน้าหลักยังเขียนแบบเดิม
-    </p>
   </section>
 
   <!-- ---------- ปิดท้าย ---------- -->
   <div class="ig-foot">
-    <p><b>อยากเห็นภาพจริง ๆ?</b> หน้าเต็มมีแอนิเมชันทีละขั้น และมีแผงควบคุมให้ลองเปลี่ยนหน้าจอผู้ใช้ด้วยมือตัวเอง</p>
-    <a class="btn btn--primary" href="index.html">▶ ไปหน้าเต็ม</a>
-    <p class="ig-foot__hint">หน้านี้สั่งพิมพ์หรือบันทึกเป็น PDF ได้เลย (Ctrl/⌘ + P) — จัดหน้าไว้ให้แล้ว</p>
-    <p class="ig-foot__print">ฉบับเต็มที่มีแอนิเมชันทีละขั้น และแผงควบคุมให้ลองเปลี่ยนหน้าจอเอง อยู่ที่หน้าแรกของเว็บนี้</p>
+    <a class="btn btn--primary" href="index.html">▶ ดูฉบับเต็ม + ลองเล่นเอง</a>
+    <p class="ig-foot__hint">พิมพ์หรือบันทึกเป็น PDF ได้ (Ctrl/⌘ + P)</p>
+    <p class="ig-foot__print">ฉบับเต็มอยู่ที่หน้าแรกของเว็บนี้</p>
   </div>
 
 </main>
