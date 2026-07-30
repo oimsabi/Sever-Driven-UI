@@ -4,11 +4,13 @@
  * แต่ละส่วนแยกเป็นฟังก์ชัน init...() อิสระจากกัน
  *   initChrome()      แถบนำทาง + progress + ปุ่มปิดแอนิเมชัน
  *   initReveal()      เอฟเฟกต์ค่อย ๆ โผล่ตอนเลื่อนถึง
- *   initRace()        02 · แข่งกันปล่อยของ
- *   initFlow()        03 · แผนภาพการไหลของข้อมูล (SVG + packet)
- *   initMapping()     04 · JSON → registry → UI ทีละบรรทัด
- *   initPlayground()  05 · แก้ JSON แล้วเรนเดอร์สด
- *   initOta()         06 · เปลี่ยน UI โดยไม่อัปเดตแอป
+ *   initShowcase()    00 · ผลลัพธ์ใน hero + 01 · แยกชิ้นดูทีละส่วน
+ *   initJourney()     02 · ขั้นตอนแบบเดิม เดินทีละขั้นพร้อมนับเวลา
+ *   initRace()        03 · แข่งกันว่าใครถึงมือผู้ใช้ก่อน
+ *   initFlow()        06 · แผนภาพการเดินทางของข้อมูล (SVG + packet)
+ *   initMapping()     06 · แบบแปลน → กล่องเลโก้ → หน้าจอ ทีละบรรทัด
+ *   initPlayground()  06 · แก้แบบแปลนแล้วเรนเดอร์สด
+ *   initOta()         04 · เปลี่ยนหน้าจอโดยไม่อัปเดตแอป
  * ===================================================================== */
 
 (function () {
@@ -99,7 +101,142 @@
     items.forEach(function (el) { io.observe(el); });
   }
 
-  /* ------------------------------------------------------- 02 · RACE */
+  /* -------------------------------------------------------------------
+   * 00 · ผลลัพธ์ + 01 · แยกชิ้นดู
+   * หน้าจอตัวอย่างชุดเดียว ใช้ทั้งใน hero (โชว์ผลลัพธ์) และในส่วนแยกชิ้น
+   * หน้าเว็บนี้เรนเดอร์ตัวอย่างด้วย renderer ตัวเดียวกับที่มันอธิบายอยู่
+   * ----------------------------------------------------------------- */
+  var SHOWCASE = {
+    screenId: 'product',
+    components: [
+      { type: 'image', label: '👟', height: 118 },
+      { type: 'badge', tone: 'danger', value: 'ลด 20% วันนี้เท่านั้น' },
+      { type: 'text', variant: 'title', value: 'รองเท้าวิ่ง Aero X' },
+      { type: 'rating', value: 4.5, count: 218 },
+      { type: 'text', variant: 'body', value: 'น้ำหนักเบา 210 กรัม พื้นโฟมรองรับแรงกระแทก เหมาะกับการวิ่งระยะไกล' },
+      { type: 'divider' },
+      { type: 'button', tone: 'primary', value: 'ซื้อเลย ฿2,490' }
+    ]
+  };
+
+  /* index อ้างถึงตำแหน่งชิ้นส่วนใน SHOWCASE.components ด้านบน */
+  var PARTS = [
+    { i: 0, icon: '🖼️', name: 'รูปสินค้า',   desc: 'ภาพใหญ่บนสุด ตัวดึงสายตาแรกสุดของหน้า' },
+    { i: 1, icon: '🏷️', name: 'ป้ายลดราคา', desc: 'ป้ายเล็กสีแดง บอกว่ากำลังมีโปรโมชันอยู่' },
+    { i: 2, icon: '🔤', name: 'ชื่อสินค้า',   desc: 'ข้อความตัวหนาขนาดใหญ่ บอกว่านี่คือสินค้าอะไร' },
+    { i: 3, icon: '⭐', name: 'คะแนนรีวิว',  desc: 'ดาวกับจำนวนคนรีวิว ช่วยสร้างความมั่นใจ' },
+    { i: 4, icon: '📝', name: 'คำบรรยาย',   desc: 'ข้อความตัวเล็ก อธิบายรายละเอียดสินค้า' },
+    { i: 6, icon: '🔘', name: 'ปุ่มซื้อ',     desc: 'ปุ่มใหญ่ปิดท้าย เป้าหมายจริง ๆ ของหน้านี้' }
+  ];
+
+  function initShowcase() {
+    var hero = $('#heroScreen');
+    if (hero) {
+      window.SDUI.renderScreen(hero, SHOWCASE, { animate: !motionOff(), stagger: 110 });
+    }
+
+    var screen = $('#partsScreen');
+    var list = $('#partsList');
+    if (!screen || !list) return;
+
+    window.SDUI.renderScreen(screen, SHOWCASE, { animate: false });
+    var nodes = Array.prototype.slice.call(screen.children);
+
+    var buttons = PARTS.map(function (part) {
+      var li = document.createElement('li');
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'parts__btn';
+      btn.innerHTML = '<span class="parts__icon" aria-hidden="true">' + part.icon + '</span>'
+        + '<span class="parts__text"><b>' + part.name + '</b><em>' + part.desc + '</em></span>';
+      btn.addEventListener('click', function () { select(part.i); });
+      li.appendChild(btn);
+      list.appendChild(li);
+      return { btn: btn, i: part.i };
+    });
+
+    /* เลือกชิ้นไหน ก็หรี่ชิ้นอื่นลง ให้เห็นชัดว่าพูดถึงส่วนไหนของหน้าจอ */
+    function select(index) {
+      var already = screen.classList.contains('is-focusing')
+        && nodes[index] && nodes[index].classList.contains('is-lit');
+      nodes.forEach(function (n) { n.classList.remove('is-lit'); });
+      buttons.forEach(function (b) { b.btn.classList.toggle('is-active', !already && b.i === index); });
+
+      if (already) {          /* กดซ้ำที่ชิ้นเดิม = เลิกเน้น กลับไปเห็นทั้งหน้า */
+        screen.classList.remove('is-focusing');
+        return;
+      }
+      screen.classList.add('is-focusing');
+      if (nodes[index]) {
+        nodes[index].classList.add('is-lit');
+        nodes[index].scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }
+
+  /* -------------------------------------------------------------------
+   * 02 · กว่าจะได้หน้าจอนี้ — เดินไปทีละขั้นพร้อมนับเวลาที่ผ่านไป
+   * ----------------------------------------------------------------- */
+  function initJourney() {
+    var list = $('#journeyList');
+    if (!list) return;
+
+    var steps = $$('[data-j]', list);
+    var clock = $('#journeyClock');
+    var verdict = $('#journeyVerdict');
+    var playBtn = $('#journeyPlay');
+    var signal = null;
+
+    function fmt(d) {
+      if (d === 0) return 'ยังไม่เริ่ม';
+      if (d === 0.5) return 'ครึ่งวัน';
+      return (d % 1 ? d.toFixed(1) : String(d)) + ' วัน';
+    }
+
+    function reset() {
+      if (signal) signal.abort();
+      signal = null;
+      steps.forEach(function (s) { s.classList.remove('is-running', 'is-done'); });
+      clock.textContent = 'เวลาที่ผ่านไป: —';
+      verdict.textContent = 'กดปุ่มด้านบนเพื่อเดินดูทีละขั้น';
+      verdict.className = 'journey__verdict';
+      playBtn.disabled = false;
+      playBtn.textContent = '▶ เดินไปทีละขั้น';
+    }
+
+    playBtn.addEventListener('click', function () {
+      reset();
+      signal = makeSignal();
+      var sig = signal;
+      playBtn.disabled = true;
+      playBtn.textContent = '⏳ กำลังเดิน…';
+      var days = 0;
+
+      steps.reduce(function (chain, step) {
+        return chain.then(function () {
+          if (sig.aborted) return Promise.reject(new Error('aborted'));
+          step.classList.add('is-running');
+          return sleep(900, sig).then(function () {
+            step.classList.remove('is-running');
+            step.classList.add('is-done');
+            days += parseFloat(step.dataset.days) || 0;
+            clock.textContent = 'เวลาที่ผ่านไป: ' + fmt(days);
+          });
+        });
+      }, Promise.resolve()).then(function () {
+        verdict.innerHTML = 'ทั้งหมดนี้เพื่อเปลี่ยน <b>คำเดียว</b> — รวมแล้ว <b>' + fmt(days)
+          + '</b> และผู้ใช้ที่ไม่กดอัปเดตก็จะไม่เห็นเลยตลอดไป';
+        verdict.className = 'journey__verdict is-bad';
+        playBtn.disabled = false;
+        playBtn.textContent = '↻ เดินอีกครั้ง';
+      }).catch(function () { /* ถูกยกเลิกด้วยปุ่มเริ่มใหม่ */ });
+    });
+
+    $('#journeyReset').addEventListener('click', reset);
+    reset();
+  }
+
+  /* ------------------------------------------------------- 03 · RACE */
   var RACE = {
     classic: [
       { ms: 900,  clock: '+2 ชั่วโมง' },
@@ -172,8 +309,8 @@
       startBtn.textContent = '⏳ กำลังจำลอง…';
 
       Promise.all([
-        runLane('classic', RACE.classic, '🐢 กว่าจะถึงผู้ใช้ทุกคน ~7 วัน (และบางคนไม่อัปเดตเลย)', false, sig),
-        runLane('sdui', RACE.sdui, '⚡ ผู้ใช้ทุกคนเห็น UI ใหม่ภายในไม่กี่นาที', true, sig)
+        runLane('classic', RACE.classic, '🐢 กว่าจะถึงผู้ใช้ทุกคน ~7 วัน และบางคนไม่กดอัปเดตเลย', false, sig),
+        runLane('sdui', RACE.sdui, '⚡ ผู้ใช้ทุกคนเห็นหน้าจอใหม่ภายในไม่กี่นาที', true, sig)
       ]).then(function () {
         startBtn.disabled = false;
         startBtn.textContent = '↻ จำลองอีกครั้ง';
@@ -833,13 +970,13 @@
 
     function paint() {
       window.SDUI.renderScreen(screen, buildSchema(onDevice.config), { animate: !motionOff() });
-      clientVerEl.textContent = 'กำลังใช้ config v' + onDevice.version;
+      clientVerEl.textContent = 'ใช้แบบแปลนครั้งที่ ' + onDevice.version;
       clientVerEl.classList.toggle('is-stale', onDevice.version < serverVersion);
     }
 
     function markDirty() {
       dirty = true;
-      hintEl.innerHTML = '✏️ มีการแก้ไขที่ <b>ยังไม่ได้ deploy</b> — ค่านี้ยังอยู่แค่ในแผงควบคุม';
+      hintEl.innerHTML = '✏️ แก้แล้วแต่ <b>ยังไม่ได้กดบันทึก</b> — ค่านี้ยังอยู่แค่ในหน้าจัดการของคุณ';
     }
 
     Object.keys(fields).forEach(function (key) {
@@ -851,11 +988,11 @@
       deployed = snapshot();
       serverVersion++;
       dirty = false;
-      serverVerEl.textContent = 'config v' + serverVersion;
+      serverVerEl.textContent = 'บันทึกครั้งที่ ' + serverVersion;
       clientVerEl.classList.add('is-stale');
-      hintEl.innerHTML = '✅ deploy <b>config v' + serverVersion + '</b> ขึ้นเซิร์ฟเวอร์แล้ว '
-        + '(ใช้เวลาไม่กี่วินาที ไม่ต้อง build แอป) — แต่มือถือยังถือ config v' + onDevice.version
-        + ' อยู่ กด <b>🔄 ผู้ใช้เปิดแอป</b> เพื่อดึงของใหม่';
+      hintEl.innerHTML = '✅ บันทึกแบบแปลนใหม่แล้ว (ใช้เวลาไม่กี่วินาที ไม่ต้องแก้ตัวแอปเลย) '
+        + '— แต่มือถือยังถือแบบแปลนครั้งที่ ' + onDevice.version
+        + ' อยู่ กด <b>🔄 ผู้ใช้เปิดแอป</b> เพื่อให้ไปรับของใหม่';
     });
 
     $('#otaFetch').addEventListener('click', function () {
@@ -869,9 +1006,9 @@
         paint();
         wire.classList.remove('is-live');
         hintEl.innerHTML = onDevice.version === 1 && !dirty
-          ? 'ดึง config เดิมมาใหม่ — ลองแก้ค่าด้านบนแล้ว deploy ดูสิ'
-          : '🎉 มือถือเรนเดอร์ใหม่ด้วย <b>config v' + onDevice.version + '</b> แล้ว '
-            + 'สังเกตว่าแอปยังเป็น <b>v1.0.0</b> ตัวเดิม ไม่ได้อัปเดตจาก store เลยแม้แต่ครั้งเดียว';
+          ? 'ไปรับแบบแปลนเดิมกลับมา — ลองแก้ค่าด้านบนแล้วกดบันทึกดูสิ'
+          : '🎉 มือถือวาดหน้าจอใหม่ตาม <b>แบบแปลนครั้งที่ ' + onDevice.version + '</b> แล้ว '
+            + 'สังเกตว่าแอปยังเป็น <b>เวอร์ชัน 1.0.0</b> ตัวเดิม ไม่ได้อัปเดตจากสโตร์เลยแม้แต่ครั้งเดียว';
       }, motionOff() ? 60 : 950);
     });
 
@@ -882,6 +1019,8 @@
   function boot() {
     initChrome();
     initReveal();
+    initShowcase();
+    initJourney();
     initRace();
     initFlow();
     initMapping();

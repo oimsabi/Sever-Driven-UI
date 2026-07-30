@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Server-Driven UI — อธิบายหลักการทำงานด้วยภาพเคลื่อนไหว</title>
-<meta name="description" content="หน้าเว็บอธิบายหลักการทำงานของ Server-Driven UI (SDUI) ด้วยแอนิเมชัน HTML/CSS/JavaScript พร้อม playground ให้ลองเล่นจริง">
+<title>เปลี่ยนหน้าจอแอปได้ในไม่กี่นาที — Server-Driven UI อธิบายด้วยภาพ</title>
+<meta name="description" content="เริ่มจากผลลัพธ์ที่เห็น แล้วไล่ย้อนว่ากว่าจะได้หน้าจอนั้นต้องผ่านอะไร และทำไม Server-Driven UI ทำให้เปลี่ยนหน้าจอได้ในไม่กี่นาที อธิบายด้วยแอนิเมชันแบบไม่ต้องมีพื้นฐานเทคนิค">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
 </head>
@@ -14,16 +14,15 @@
 <header class="nav" id="nav">
   <a class="nav__brand" href="#top">
     <span class="nav__logo">🧩</span>
-    <span>Server-Driven UI</span>
+    <span>เปลี่ยนหน้าจอแอป</span>
   </a>
   <nav class="nav__links">
-    <a href="#concept">แนวคิด</a>
-    <a href="#compare">เปรียบเทียบ</a>
-    <a href="#flow">ขั้นตอนการทำงาน</a>
-    <a href="#render">JSON → UI</a>
-    <a href="#playground">ลองเล่น</a>
-    <a href="#update">อัปเดตทันที</a>
-    <a href="#tradeoff">ข้อดี/ข้อเสีย</a>
+    <a href="#parts">หน้าจอนี้มีอะไร</a>
+    <a href="#howto">กว่าจะได้หน้าจอนี้</a>
+    <a href="#switch">ทางที่ดีกว่า</a>
+    <a href="#try">ลองเอง</a>
+    <a href="#tradeoff">ข้อดี/ข้อควรระวัง</a>
+    <a href="#behind">เบื้องหลัง</a>
   </nav>
   <button class="motion-toggle" id="motionToggle" title="เปิด/ปิดแอนิเมชัน" aria-pressed="false">
     <span class="motion-toggle__icon" aria-hidden="true">🎬</span><span class="motion-toggle__label">แอนิเมชัน: เปิด</span>
@@ -31,151 +30,219 @@
 </header>
 <div class="scroll-progress" id="scrollProgress"></div>
 
-<!-- ============ HERO ============ -->
+<!-- ============ 00 · ผลลัพธ์ ============ -->
 <section class="hero" id="top">
   <div class="hero__glow" aria-hidden="true"></div>
   <div class="hero__inner">
-    <div class="hero__copy">
-      <span class="pill">อธิบายหลักการทำงานด้วยภาพเคลื่อนไหว</span>
-      <h1>หน้าตาแอป <em>ไม่ได้</em> ถูกฝังไว้ในแอป<br>แต่ถูก <em>ส่งมาจากเซิร์ฟเวอร์</em></h1>
-      <p class="hero__lead">
-        <strong>Server-Driven UI (SDUI)</strong> คือแนวคิดที่ให้เซิร์ฟเวอร์เป็นคนบอกว่า
-        “หน้าจอนี้ประกอบด้วยอะไรบ้าง เรียงยังไง ข้อมูลอะไร” ในรูปแบบ JSON
-        แล้วฝั่งไคลเอนต์ทำหน้าที่แค่ <em>แปล JSON เป็น UI จริง</em> เท่านั้น
-      </p>
-      <div class="hero__cta">
-        <a class="btn btn--primary" href="#flow">▶ ดูขั้นตอนการทำงาน</a>
-        <a class="btn btn--ghost" href="#playground">🧪 ลองแก้ JSON เอง</a>
+
+    <!-- ผลลัพธ์มาก่อนทุกอย่าง: ให้เห็นของจริงก่อนจะอธิบายอะไรเลย -->
+    <div class="result">
+      <span class="result__tag">👇 นี่คือผลลัพธ์</span>
+      <div class="phone phone--hero">
+        <div class="phone__notch"></div>
+        <div class="phone__screen" id="heroScreen"></div>
       </div>
-      <ul class="hero__stats">
-        <li><b>1</b><span>ชุด JSON<br>ใช้ได้ทุกแพลตฟอร์ม</span></li>
-        <li><b>0</b><span>ครั้งที่ต้อง<br>ส่งขึ้น App Store</span></li>
-        <li><b>~1s</b><span>เวลาที่ผู้ใช้<br>เห็น UI ใหม่</span></li>
-      </ul>
+      <p class="result__cap">หน้าสินค้าในแอปช้อปปิ้ง — หน้าตาธรรมดาที่เราเห็นกันทุกวัน</p>
     </div>
 
-    <!-- แอนิเมชันวนลูป: JSON → UI -->
-    <div class="hero__demo" aria-hidden="true">
-      <div class="loop">
-        <div class="loop__json">
-          <div class="loop__bar loop__bar--head"></div>
-          <div class="loop__line" style="--w:70%"></div>
-          <div class="loop__line" style="--w:90%"></div>
-          <div class="loop__line" style="--w:55%"></div>
-          <div class="loop__line" style="--w:80%"></div>
-          <div class="loop__line" style="--w:40%"></div>
-          <span class="loop__tag">config.json</span>
-        </div>
-        <div class="loop__wire">
-          <span class="loop__dot"></span>
-          <span class="loop__dot" style="animation-delay:.5s"></span>
-          <span class="loop__dot" style="animation-delay:1s"></span>
-        </div>
-        <div class="loop__phone">
-          <div class="loop__notch"></div>
-          <div class="loop__screen">
-            <div class="loop__el loop__el--img"></div>
-            <div class="loop__el loop__el--title"></div>
-            <div class="loop__el loop__el--text"></div>
-            <div class="loop__el loop__el--text" style="--w:60%"></div>
-            <div class="loop__el loop__el--btn"></div>
-          </div>
-          <span class="loop__tag">รับมาแล้วเรนเดอร์</span>
-        </div>
+    <div class="hero__copy">
+      <span class="pill">อธิบายด้วยภาพ · ไม่ต้องมีพื้นฐานเทคนิค</span>
+      <h1>หน้าจอนี้ <em>เปลี่ยนได้ในไม่กี่นาที</em><br>โดยที่ผู้ใช้ไม่ต้องอัปเดตแอป</h1>
+      <p class="hero__lead">
+        ปกติแล้วการขอเปลี่ยนแค่ “คำบนปุ่ม” ในแอป ใช้เวลาเป็น <strong>สัปดาห์</strong>
+        และมีหลายขั้นตอนที่ <strong>ไม่ได้อยู่ในมือเราเลย</strong>
+        หน้านี้จะพาไล่ดูว่าทำไมถึงนานขนาดนั้น แล้วมีวิธีทำให้เหลือ <em>ไม่กี่นาที</em> ได้อย่างไร
+      </p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#howto">▶ เริ่มดูว่ากว่าจะได้หน้าจอนี้ ต้องทำอะไร</a>
+        <a class="btn btn--ghost" href="#try">🎛️ ข้ามไปลองเล่นเลย</a>
       </div>
+      <ul class="hero__stats">
+        <li><b>7+</b><span>วัน<br>แบบเดิม</span></li>
+        <li><b>~3</b><span>นาที<br>แบบใหม่</span></li>
+        <li><b>0</b><span>ครั้งที่ต้อง<br>อัปเดตแอป</span></li>
+      </ul>
     </div>
   </div>
-  <a class="hero__scroll" href="#concept" aria-label="เลื่อนลง">⌄</a>
+  <a class="hero__scroll" href="#parts" aria-label="เลื่อนลง">⌄</a>
 </section>
 
 <main>
 
-<!-- ============ CONCEPT ============ -->
-<section class="section" id="concept">
+<!-- ============ 01 · หน้าจอนี้ประกอบจากอะไร ============ -->
+<section class="section section--alt" id="parts">
   <div class="section__head reveal">
-    <span class="kicker">01 — แนวคิด</span>
-    <h2>ใครเป็นคน “ตัดสินใจ” ว่าหน้าจอหน้าตาแบบไหน?</h2>
-    <p>หัวใจของเรื่องนี้มีแค่คำถามเดียว คือ <b>ตรรกะของหน้าตา (UI logic) ถูกเก็บไว้ที่ไหน</b></p>
+    <span class="kicker">01 — แยกชิ้นดู</span>
+    <h2>หน้าจอที่เห็นเมื่อกี้ ประกอบจาก “ชิ้นส่วน” ไม่กี่ชิ้น</h2>
+    <p>ลองแตะดูแต่ละชิ้น เพื่อดูว่ามันคือส่วนไหนของหน้าจอ — จุดนี้สำคัญ เพราะทั้งหน้านี้จะเล่าเรื่อง “ชิ้นส่วน” เหล่านี้ตลอด</p>
   </div>
 
-  <div class="split reveal">
-    <article class="brief brief--classic">
-      <header><span class="brief__icon">📱</span><h3>แบบดั้งเดิม — Client-Driven UI</h3></header>
-      <p>โค้ดหน้าจอทั้งหมดถูก <b>คอมไพล์ฝังไว้ในตัวแอป</b> เซิร์ฟเวอร์ส่งมาแค่ “ข้อมูลดิบ”</p>
-      <pre class="code"><code><span class="c-cm">// เซิร์ฟเวอร์ส่งมาแค่ข้อมูล</span>
-{ <span class="c-k">"name"</span>: <span class="c-s">"รองเท้าวิ่ง Aero X"</span>,
-  <span class="c-k">"price"</span>: <span class="c-n">2490</span>,
-  <span class="c-k">"discount"</span>: <span class="c-n">20</span> }
-
-<span class="c-cm">// แอปเป็นคนตัดสินใจเองว่าจะวาดยังไง</span>
-Column {
-  Image(product.image)
-  Text(product.name)
-  Text(<span class="c-s">"฿"</span> + product.price)
-}</code></pre>
-      <ul class="brief__list">
-        <li class="bad">อยากย้ายปุ่ม → ต้อง build + ส่งขึ้น store ใหม่</li>
-        <li class="bad">iOS / Android / Web ต้องแก้แยกกัน 3 ที่</li>
-        <li class="bad">ผู้ใช้ที่ไม่อัปเดตแอป จะเห็นของเก่าตลอดไป</li>
-      </ul>
-    </article>
-
-    <div class="split__vs" aria-hidden="true"><span>VS</span></div>
-
-    <article class="brief brief--sdui">
-      <header><span class="brief__icon">🛰️</span><h3>Server-Driven UI</h3></header>
-      <p>เซิร์ฟเวอร์ส่ง <b>“พิมพ์เขียวของหน้าจอ”</b> มาด้วย แอปแค่แปลตามที่บอก</p>
-      <pre class="code"><code><span class="c-cm">// เซิร์ฟเวอร์ส่งทั้งโครงหน้าจอ + ข้อมูล</span>
-{ <span class="c-k">"components"</span>: [
-   { <span class="c-k">"type"</span>: <span class="c-s">"image"</span>,  <span class="c-k">"label"</span>: <span class="c-s">"👟"</span> },
-   { <span class="c-k">"type"</span>: <span class="c-s">"text"</span>,
-     <span class="c-k">"variant"</span>: <span class="c-s">"title"</span>,
-     <span class="c-k">"value"</span>: <span class="c-s">"รองเท้าวิ่ง Aero X"</span> },
-   { <span class="c-k">"type"</span>: <span class="c-s">"button"</span>,
-     <span class="c-k">"tone"</span>: <span class="c-s">"primary"</span>,
-     <span class="c-k">"value"</span>: <span class="c-s">"ซื้อเลย ฿2,490"</span> }
-]}</code></pre>
-      <ul class="brief__list">
-        <li class="good">อยากย้ายปุ่ม → แก้ JSON บนเซิร์ฟเวอร์ จบ</li>
-        <li class="good">แก้ที่เดียว ทุกแพลตฟอร์มเปลี่ยนพร้อมกัน</li>
-        <li class="good">ทำ A/B test / โปรโมชันตามเทศกาลได้ทันที</li>
-      </ul>
-    </article>
+  <div class="parts reveal">
+    <div class="parts__preview">
+      <div class="phone phone--fit">
+        <div class="phone__notch"></div>
+        <div class="phone__screen" id="partsScreen"></div>
+      </div>
+    </div>
+    <ul class="parts__list" id="partsList"></ul>
   </div>
 
   <div class="note reveal">
-    <b>สิ่งที่ยังอยู่ฝั่งแอปเสมอ:</b> ตัว “ชิ้นส่วน UI” (component) จริง ๆ เช่นปุ่ม การ์ด รูปภาพ
-    ยังถูกเขียนเป็นโค้ด native อยู่ในแอป — เซิร์ฟเวอร์ <em>เลือกและจัดเรียง</em> ชิ้นส่วนเหล่านั้น
-    แต่ <em>ไม่ได้ส่งโค้ดมารัน</em> (นี่คือจุดต่างจาก WebView)
+    <b>ประเด็นสำคัญ:</b> ชิ้นส่วนพวกนี้ — ปุ่ม รูป ป้ายลดราคา คะแนนดาว —
+    <em>มีอยู่ในแอปแล้ว</em> เหมือนกล่องเลโก้ที่ถูกเตรียมไว้
+    คำถามคือ “ใครเป็นคนบอกว่าจะหยิบชิ้นไหนมาเรียงยังไง” — คำตอบของคำถามนี้
+    คือเรื่องทั้งหมดของหน้านี้
   </div>
 </section>
 
-<!-- ============ COMPARE / RACE ============ -->
-<section class="section section--alt" id="compare">
+<!-- ============ 02 · กว่าจะได้หน้าจอนี้ ============ -->
+<section class="section" id="howto">
   <div class="section__head reveal">
-    <span class="kicker">02 — เปรียบเทียบ</span>
-    <h2>แข่งกัน: “ขอเปลี่ยนสีปุ่มหน่อย” ใครถึงมือผู้ใช้ก่อน?</h2>
-    <p>กดปุ่มด้านล่างเพื่อจำลองเส้นทางการปล่อยการเปลี่ยนแปลงหนึ่งครั้ง ของทั้งสองแนวทาง</p>
+    <span class="kicker">02 — ขั้นตอนแบบเดิม</span>
+    <h2>กว่าหน้าจอนี้จะถึงมือผู้ใช้ ต้องผ่านมือใครบ้าง</h2>
+    <p>สมมติหัวหน้าขอแค่ “เปลี่ยนคำบนปุ่มจาก <i>ซื้อเลย</i> เป็น <i>สั่งจองก่อนใคร</i>” นี่คือสิ่งที่ต้องเกิดขึ้นทั้งหมด</p>
+  </div>
+
+  <div class="journey reveal">
+    <div class="journey__toolbar">
+      <button class="btn btn--primary" id="journeyPlay">▶ เดินไปทีละขั้น</button>
+      <button class="btn btn--ghost" id="journeyReset">↺ เริ่มใหม่</button>
+      <span class="journey__clock" id="journeyClock">เวลาที่ผ่านไป: —</span>
+    </div>
+
+    <ol class="journey__list" id="journeyList">
+      <li class="journey__step" data-j data-days="0.5">
+        <span class="journey__num">1</span>
+        <div class="journey__body">
+          <b>🎨 ดีไซเนอร์ ออกแบบหน้าจอ</b>
+          <p>ตัดสินใจว่าอะไรอยู่ตรงไหน สีอะไร ตัวอักษรใหญ่แค่ไหน</p>
+        </div>
+        <span class="journey__cost">~ครึ่งวัน</span>
+      </li>
+      <li class="journey__step" data-j data-days="1">
+        <span class="journey__num">2</span>
+        <div class="journey__body">
+          <b>👩‍💻 โปรแกรมเมอร์ เขียนหน้าจอ “ฝังลงไปในตัวแอป”</b>
+          <p>จุดนี้คือหัวใจของปัญหา — หน้าตาถูกเย็บติดไปกับตัวแอป
+             จะแก้หน้าตา ก็ต้องแก้ตัวแอป</p>
+        </div>
+        <span class="journey__cost">~1 วัน</span>
+      </li>
+      <li class="journey__step" data-j data-days="1">
+        <span class="journey__num">3</span>
+        <div class="journey__body">
+          <b>🧪 ทีมทดสอบ ลองใช้ทุกรุ่นทุกขนาดจอ</b>
+          <p>เพราะถ้าปล่อยแล้วพัง จะแก้ทันทีไม่ได้ ต้องวนใหม่ทั้งวง</p>
+        </div>
+        <span class="journey__cost">~1 วัน</span>
+      </li>
+      <li class="journey__step journey__step--out" data-j data-days="2">
+        <span class="journey__num">4</span>
+        <div class="journey__body">
+          <b>🏪 ส่งให้ App Store / Play Store ตรวจ</b>
+          <p>รอเจ้าหน้าที่ของ Apple / Google อนุมัติ นานเท่าไหร่ก็ต้องรอ</p>
+        </div>
+        <span class="journey__cost">1–3 วัน</span>
+      </li>
+      <li class="journey__step journey__step--out" data-j data-days="0">
+        <span class="journey__num">5</span>
+        <div class="journey__body">
+          <b>🚀 ปล่อยแอปเวอร์ชันใหม่ขึ้นสโตร์</b>
+          <p>ถึงตรงนี้ผู้ใช้ก็ยัง <b>ไม่เห็น</b> ของใหม่ จนกว่าจะทำข้อถัดไป</p>
+        </div>
+        <span class="journey__cost">ทันที</span>
+      </li>
+      <li class="journey__step journey__step--out" data-j data-days="3">
+        <span class="journey__num">6</span>
+        <div class="journey__body">
+          <b>📲 รอผู้ใช้แต่ละคนกดอัปเดตแอป</b>
+          <p>บางคนกดวันนี้ บางคนอีกเดือน บางคนปิดอัปเดตไว้ ก็ไม่เห็นเลยตลอดไป</p>
+        </div>
+        <span class="journey__cost">~3 วัน–ไม่สิ้นสุด</span>
+      </li>
+    </ol>
+
+    <div class="journey__verdict" id="journeyVerdict">
+      กดปุ่มด้านบนเพื่อเดินดูทีละขั้น
+    </div>
+
+    <div class="journey__insight">
+      <div class="insight">
+        <b>⚠️ สามข้อสุดท้ายไม่ได้อยู่ในมือคุณ</b>
+        <p>ข้อ 4–6 (กล่องสีส้ม) คุณควบคุมไม่ได้เลย ไม่ว่าจะรีบแค่ไหน
+           ต้องรอสโตร์ตรวจ และรอผู้ใช้กดอัปเดต</p>
+      </div>
+      <div class="insight insight--loop">
+        <b>🔁 แล้วถ้าอยากแก้อีกคำ?</b>
+        <p>กลับไปเริ่มข้อ 1 ใหม่ทั้งวง — ไม่ว่าจะเป็นการแก้เล็กแค่ไหน
+           ราคาก็เท่ากันเสมอ</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 · ทางที่ดีกว่า ============ -->
+<section class="section section--alt" id="switch">
+  <div class="section__head reveal">
+    <span class="kicker">03 — ทางที่ดีกว่า</span>
+    <h2>ถ้าแยก “หน้าตา” ออกจาก “ตัวแอป” ได้ ทุกอย่างจะเปลี่ยน</h2>
+    <p>วิธีนี้มีชื่อเรียกว่า <b>Server-Driven UI</b> แต่ไม่ต้องจำชื่อก็ได้ — ขอให้เข้าใจภาพนี้ภาพเดียว</p>
+  </div>
+
+  <!-- เปรียบเทียบด้วยเลโก้ ให้คนไม่ใช่สายเทคเห็นภาพก่อนเข้าเรื่องจริง -->
+  <div class="lego reveal">
+    <div class="lego__card">
+      <span class="lego__icon" aria-hidden="true">🧱</span>
+      <h3>แอปคือ “กล่องเลโก้”</h3>
+      <p>ในแอปมีชิ้นส่วนเตรียมไว้แล้ว — ปุ่ม รูป ป้ายลดราคา คะแนนดาว การ์ด
+         ชิ้นส่วนพวกนี้ติดมากับแอปตั้งแต่แรก</p>
+    </div>
+    <div class="lego__arrow" aria-hidden="true">
+      <span class="lego__dot"></span>
+      <span class="lego__dot" style="animation-delay:.6s"></span>
+    </div>
+    <div class="lego__card lego__card--plan">
+      <span class="lego__icon" aria-hidden="true">📋</span>
+      <h3>เซิร์ฟเวอร์ส่ง “แบบแปลน”</h3>
+      <p>เป็นข้อความสั้น ๆ ที่บอกว่า “หยิบชิ้นไหน เรียงลำดับไหน เขียนข้อความอะไร”
+         ไม่ได้ส่งชิ้นส่วนใหม่มา แค่ส่งคำสั่งประกอบ</p>
+    </div>
+  </div>
+
+  <div class="punch reveal">
+    <p>
+      อยากเปลี่ยนหน้าจอ = <b>ส่งแบบแปลนใหม่</b><br>
+      ไม่ต้องส่งกล่องเลโก้ใหม่ = <b>ไม่ต้องอัปเดตแอป</b>
+    </p>
+    <p class="punch__sub">
+      และเพราะแบบแปลนอยู่ในมือคุณเอง — ข้อ 4, 5, 6 ที่คุณคุมไม่ได้เมื่อกี้
+      <em>หายไปทั้งหมด</em>
+    </p>
+  </div>
+
+  <div class="section__head section__head--sub reveal">
+    <h3>เห็นภาพชัดที่สุดคือจับมาแข่งกัน</h3>
+    <p>งานเดียวกัน คือ “เปลี่ยนคำบนปุ่ม” — กดเริ่มแล้วดูว่าใครถึงมือผู้ใช้ก่อน</p>
   </div>
 
   <div class="race reveal">
     <div class="race__toolbar">
-      <button class="btn btn--primary" id="raceStart">▶ เริ่มจำลอง</button>
+      <button class="btn btn--primary" id="raceStart">▶ เริ่มแข่ง</button>
       <button class="btn btn--ghost" id="raceReset">↺ รีเซ็ต</button>
-      <span class="race__hint">แต่ละช่องคือหนึ่งขั้นตอนที่ต้องผ่านจริงในการทำงาน</span>
+      <span class="race__hint">แต่ละช่องคือหนึ่งขั้นตอนที่ต้องผ่านจริง</span>
     </div>
 
     <div class="race__lanes">
       <div class="lane" data-lane="classic">
         <div class="lane__head">
-          <h3>📱 Client-Driven UI</h3>
+          <h3>📱 แบบเดิม</h3>
           <span class="lane__clock" data-clock>—</span>
         </div>
         <ol class="lane__steps">
-          <li data-step><i>1</i> แก้โค้ดในแอป</li>
-          <li data-step><i>2</i> Build &amp; ทดสอบ</li>
-          <li data-step><i>3</i> ส่งขึ้น App Store / Play</li>
-          <li data-step><i>4</i> รอทีมงานรีวิว</li>
+          <li data-step><i>1</i> ออกแบบ</li>
+          <li data-step><i>2</i> เขียนโค้ดในแอป</li>
+          <li data-step><i>3</i> ทดสอบ</li>
+          <li data-step><i>4</i> รอสโตร์ตรวจ</li>
           <li data-step><i>5</i> ปล่อยเวอร์ชันใหม่</li>
           <li data-step><i>6</i> รอผู้ใช้กดอัปเดต</li>
         </ol>
@@ -184,14 +251,14 @@ Column {
 
       <div class="lane lane--sdui" data-lane="sdui">
         <div class="lane__head">
-          <h3>🛰️ Server-Driven UI</h3>
+          <h3>🛰️ แบบใหม่ (Server-Driven UI)</h3>
           <span class="lane__clock" data-clock>—</span>
         </div>
         <ol class="lane__steps">
-          <li data-step><i>1</i> แก้ค่าใน CMS / JSON</li>
-          <li data-step><i>2</i> Deploy config (วินาที)</li>
-          <li data-step><i>3</i> ผู้ใช้เปิดแอป → ขอ config</li>
-          <li data-step><i>4</i> เรนเดอร์ UI ใหม่ทันที</li>
+          <li data-step><i>1</i> แก้ข้อความในหน้าจัดการ</li>
+          <li data-step><i>2</i> กดบันทึก</li>
+          <li data-step><i>3</i> ผู้ใช้เปิดแอป</li>
+          <li data-step><i>4</i> เห็นของใหม่ทันที</li>
         </ol>
         <div class="lane__result" data-result>ผู้ใช้ยังเห็นของเดิม…</div>
       </div>
@@ -199,11 +266,141 @@ Column {
   </div>
 </section>
 
-<!-- ============ FLOW ============ -->
-<section class="section" id="flow">
+<!-- ============ 04 · ลองเอง ============ -->
+<section class="section" id="try">
   <div class="section__head reveal">
-    <span class="kicker">03 — ขั้นตอนการทำงาน</span>
-    <h2>ข้อมูลวิ่งยังไง ตั้งแต่กดเปิดแอป จนเห็นหน้าจอ</h2>
+    <span class="kicker">04 — ลองเป็นคนคุมหน้าจอเอง</span>
+    <h2>ลองแก้หน้าจอของผู้ใช้ ด้วยมือคุณเอง</h2>
+    <p>
+      ข้างล่างนี้ทำงานจริง ไม่ใช่วิดีโอ — ลองแก้ข้อความหรือเปิดปิดสวิตช์ แล้วกด
+      <b>บันทึก</b> ตามด้วย <b>ผู้ใช้เปิดแอป</b> แล้วสังเกตว่าป้ายเวอร์ชันแอปไม่เคยเปลี่ยนเลย
+    </p>
+  </div>
+
+  <div class="ota reveal">
+    <div class="ota__server">
+      <div class="ota__panelhead">
+        <h3>🎛️ หน้าจัดการของคุณ</h3>
+        <span class="tag" id="otaServerVer">บันทึกครั้งที่ 1</span>
+      </div>
+
+      <label class="field">
+        <span>ชื่อสินค้า</span>
+        <input type="text" id="otaTitle" value="รองเท้าวิ่ง Aero X" maxlength="40">
+      </label>
+
+      <label class="field">
+        <span>ข้อความบนปุ่ม</span>
+        <input type="text" id="otaCta" value="ซื้อเลย ฿2,490" maxlength="30">
+      </label>
+
+      <label class="field">
+        <span>สีปุ่ม</span>
+        <select id="otaTone">
+          <option value="primary">ฟ้า-เขียว (ปกติ)</option>
+          <option value="secondary">เทา (เรียบ ๆ)</option>
+          <option value="danger">แดง (เร่งการตัดสินใจ)</option>
+        </select>
+      </label>
+
+      <div class="field field--switches">
+        <label class="switch"><input type="checkbox" id="otaBadge"><span></span>แสดงป้าย “ลด 20%”</label>
+        <label class="switch"><input type="checkbox" id="otaBanner"><span></span>แสดงแบนเนอร์แคมเปญบนสุด</label>
+        <label class="switch"><input type="checkbox" id="otaReview" checked><span></span>แสดงคะแนนรีวิว</label>
+      </div>
+
+      <div class="ota__actions">
+        <button class="btn btn--primary" id="otaDeploy">💾 บันทึก</button>
+        <button class="btn btn--ghost" id="otaFetch">🔄 ผู้ใช้เปิดแอป</button>
+      </div>
+      <p class="ota__hint" id="otaHint">แก้ค่าด้านบน แล้วกด “บันทึก” — สังเกตว่ามือถือยังไม่เปลี่ยน จนกว่าผู้ใช้จะเปิดแอป</p>
+    </div>
+
+    <div class="ota__wire" aria-hidden="true"><span class="ota__packet" id="otaPacket">แบบแปลน</span></div>
+
+    <div class="ota__client">
+      <div class="ota__panelhead">
+        <h3>📱 มือถือผู้ใช้</h3>
+        <span class="tag tag--fixed">แอปเวอร์ชัน 1.0.0 · ไม่เคยอัปเดต</span>
+      </div>
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__screen" id="otaScreen"></div>
+      </div>
+      <span class="tag" id="otaClientVer">ใช้แบบแปลนครั้งที่ 1</span>
+    </div>
+  </div>
+
+  <div class="note note--win reveal">
+    <b>สิ่งที่เพิ่งเกิดขึ้น:</b> คุณเปลี่ยนหน้าจอของผู้ใช้ได้เอง ภายในไม่กี่วินาที
+    โดย <em>ไม่ต้องเรียกโปรแกรมเมอร์ ไม่ต้องรอสโตร์ตรวจ ไม่ต้องรอใครกดอัปเดต</em>
+  </div>
+</section>
+
+<!-- ============ 05 · ข้อดี / ข้อควรระวัง ============ -->
+<section class="section section--alt" id="tradeoff">
+  <div class="section__head reveal">
+    <span class="kicker">05 — ต้องแลกกับอะไร</span>
+    <h2>ฟังดูดีมาก แล้วมีข้อเสียไหม? มี</h2>
+    <p>ไม่มีวิธีไหนได้มาฟรี ๆ วิธีนี้แก้ปัญหาเรื่องความเร็ว แต่ย้ายความยุ่งยากไปไว้อีกที่</p>
+  </div>
+
+  <div class="cards reveal">
+    <article class="card card--good">
+      <h3>✅ ได้อะไร</h3>
+      <ul>
+        <li><b>เปลี่ยนได้ในไม่กี่นาที</b> ไม่ผูกกับรอบปล่อยแอป</li>
+        <li><b>ทุกเครื่องเปลี่ยนพร้อมกัน</b> ทั้ง iPhone, Android, เว็บ</li>
+        <li><b>ทดลองได้ถูก</b> เช่น ลองปุ่มสองแบบดูว่าคนกดแบบไหนมากกว่า</li>
+        <li><b>พังก็ย้อนกลับได้เร็ว</b> กดกลับไปแบบแปลนเดิม ไม่ต้องแก้แอป</li>
+        <li><b>ทีมการตลาด/ดีไซน์ทำเองได้</b> ไม่ต้องรอคิวทีมแอป</li>
+      </ul>
+    </article>
+    <article class="card card--bad">
+      <h3>⚠️ เสียอะไร</h3>
+      <ul>
+        <li><b>ต้องลงทุนสร้างระบบนี้ก่อน</b> ซึ่งใช้เวลาและคน — ไม่ได้มาฟรี</li>
+        <li><b>ผิดครั้งเดียวกระทบทุกคนทันที</b> เพราะไม่มีขั้นตอนตรวจคั่นอีกแล้ว</li>
+        <li><b>ต้องมีเน็ต</b> ถ้าโหลดแบบแปลนไม่ได้ ต้องมีแผนสำรอง</li>
+        <li><b>ชิ้นส่วนใหม่ยังต้องอัปเดตแอป</b> เปลี่ยนการจัดเรียงได้ฟรี
+            แต่ถ้าอยากได้ของที่แอปยังไม่มี ก็ต้องวนวงเดิม</li>
+        <li><b>หาสาเหตุยากขึ้นเวลาพัง</b> ปัญหาอาจอยู่ที่แบบแปลน ไม่ใช่ที่แอป</li>
+      </ul>
+    </article>
+    <article class="card card--tip">
+      <h3>🎯 คุ้มเมื่อไหร่</h3>
+      <ul>
+        <li>หน้าจอที่ <b>เปลี่ยนบ่อยตามธุรกิจ</b> — หน้าแรก โปรโมชัน แคมเปญ</li>
+        <li>มีหลายแพลตฟอร์มที่ต้อง <b>เหมือนกันเป๊ะ</b></li>
+        <li>อยาก <b>ทดลองบ่อย</b> จนรอบปล่อยแอปตามไม่ทัน</li>
+        <li class="muted">ไม่คุ้มถ้า: แอปเล็ก หน้าจอนิ่ง ปล่อยอัปเดตได้สบายอยู่แล้ว</li>
+      </ul>
+      <p class="card__foot">ที่ใช้กันจริงคือ <b>ผสมกัน</b> — ทำแบบนี้เฉพาะหน้าจอที่เปลี่ยนบ่อย ส่วนหน้าหลักยังทำแบบเดิม</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 06 · เบื้องหลัง (โซนเทคนิค) ============ -->
+<section class="section" id="behind">
+  <div class="section__head reveal">
+    <span class="kicker">06 — เบื้องหลัง</span>
+    <h2>“แบบแปลน” ที่พูดถึง หน้าตาจริงเป็นอย่างไร</h2>
+    <p class="section__head-note">
+      ส่วนนี้เป็นของแถมสำหรับคนอยากรู้ลึก — <b>ข้ามไปได้ไม่เสียเนื้อหาหลัก</b>
+      ถ้าเข้าใจเรื่องกล่องเลโก้กับแบบแปลนแล้ว ก็ถือว่าเข้าใจครบแล้ว
+    </p>
+  </div>
+
+  <div class="behind reveal">
+    <p class="behind__lead">
+      “แบบแปลน” จริง ๆ คือข้อความสั้น ๆ รูปแบบหนึ่งที่เรียกว่า <b>JSON</b>
+      อ่านได้แบบนี้: <i>“ชิ้นแรกเป็นรูป ชิ้นที่สองเป็นป้ายสีแดงเขียนว่าลด 20% ชิ้นที่สามเป็นชื่อสินค้า…”</i>
+    </p>
+  </div>
+
+  <!-- 06.1 เส้นทางของข้อมูล -->
+  <div class="section__head section__head--sub reveal">
+    <h3>ข้อมูลเดินทางยังไง ตั้งแต่กดเปิดแอปจนเห็นหน้าจอ</h3>
     <p>กด <b>เล่น</b> เพื่อดูทีละขั้น หรือกดที่หมายเลขเพื่อกระโดดไปขั้นที่สนใจ</p>
   </div>
 
@@ -211,7 +408,7 @@ Column {
     <!-- แผนภาพถูกสร้างด้วย JS จากข้อมูลชุดเดียว แล้ววางผังใหม่ตามขนาดจอ
          (มือถือ = เรียงลงแนวตั้ง / แท็บเล็ตขึ้นไป = เรียงตามแนวนอน) -->
     <div class="flow__stage">
-      <svg id="flowSvg" role="img" aria-label="แผนภาพการไหลของข้อมูลใน Server-Driven UI"></svg>
+      <svg id="flowSvg" role="img" aria-label="แผนภาพการเดินทางของข้อมูล"></svg>
       <div class="flow__badge" id="flowBadge">พร้อมเริ่ม</div>
     </div>
 
@@ -229,38 +426,35 @@ Column {
       </div>
     </aside>
   </div>
-</section>
 
-<!-- ============ RENDER MAPPING ============ -->
-<section class="section section--alt" id="render">
-  <div class="section__head reveal">
-    <span class="kicker">04 — หัวใจของฝั่งไคลเอนต์</span>
-    <h2>Component Registry: ตารางแปล “ชื่อ” ให้กลายเป็น “ของจริง”</h2>
-    <p>ไคลเอนต์เก็บ “ทะเบียนชิ้นส่วน” เอาไว้ พอเจอ <code>"type": "button"</code> ก็ไปหยิบปุ่มจริงมาวาด — กดปุ่มด้านล่างเพื่อไล่ดูทีละบรรทัด</p>
+  <!-- 06.2 แบบแปลน → หน้าจอ -->
+  <div class="section__head section__head--sub reveal">
+    <h3>แอปอ่านแบบแปลนทีละบรรทัด แล้วหยิบชิ้นเลโก้มาต่อ</h3>
+    <p>กดปุ่มไล่ดูทีละบรรทัด — บรรทัดซ้ายคือคำสั่ง กลางคือกล่องเลโก้ที่แอปมี ขวาคือผลที่ได้</p>
   </div>
 
   <div class="mapping reveal">
     <div class="mapping__col">
-      <h4 class="mapping__label">① JSON จากเซิร์ฟเวอร์</h4>
+      <h4 class="mapping__label">① แบบแปลนที่ส่งมา</h4>
       <pre class="code code--tall" id="mapJson"></pre>
     </div>
 
     <div class="mapping__col mapping__col--mid">
-      <h4 class="mapping__label">② เปิดตารางทะเบียน</h4>
+      <h4 class="mapping__label">② กล่องเลโก้ที่แอปมี</h4>
       <div class="registry" id="registry">
-        <div class="registry__row" data-type="image"><code>"image"</code><span>→</span><b>ImageView</b></div>
-        <div class="registry__row" data-type="badge"><code>"badge"</code><span>→</span><b>Chip</b></div>
-        <div class="registry__row" data-type="text"><code>"text"</code><span>→</span><b>TextView</b></div>
-        <div class="registry__row" data-type="rating"><code>"rating"</code><span>→</span><b>RatingBar</b></div>
-        <div class="registry__row" data-type="divider"><code>"divider"</code><span>→</span><b>Divider</b></div>
-        <div class="registry__row" data-type="button"><code>"button"</code><span>→</span><b>Button</b></div>
-        <div class="registry__row registry__row--unknown" data-type="__unknown"><code>"???"</code><span>→</span><b>Fallback</b></div>
+        <div class="registry__row" data-type="image"><code>"image"</code><span>→</span><b>รูปภาพ</b></div>
+        <div class="registry__row" data-type="badge"><code>"badge"</code><span>→</span><b>ป้ายเล็ก</b></div>
+        <div class="registry__row" data-type="text"><code>"text"</code><span>→</span><b>ข้อความ</b></div>
+        <div class="registry__row" data-type="rating"><code>"rating"</code><span>→</span><b>คะแนนดาว</b></div>
+        <div class="registry__row" data-type="divider"><code>"divider"</code><span>→</span><b>เส้นคั่น</b></div>
+        <div class="registry__row" data-type="button"><code>"button"</code><span>→</span><b>ปุ่มกด</b></div>
+        <div class="registry__row registry__row--unknown" data-type="__unknown"><code>"???"</code><span>→</span><b>ไม่มีในกล่อง</b></div>
       </div>
-      <p class="mapping__hint">ถ้าไม่เจอในทะเบียน (แอปเวอร์ชันเก่า) ต้อง <b>ข้ามอย่างปลอดภัย</b> ไม่ใช่แครช</p>
+      <p class="mapping__hint">ถ้าแบบแปลนสั่งชิ้นที่ <b>ไม่มีในกล่อง</b> (แอปรุ่นเก่า) ต้องข้ามอย่างปลอดภัย ไม่ใช่ทำแอปพัง</p>
     </div>
 
     <div class="mapping__col mapping__col--preview">
-      <h4 class="mapping__label">③ UI จริงที่ถูกวาด</h4>
+      <h4 class="mapping__label">③ หน้าจอที่ต่อออกมา</h4>
       <div class="phone">
         <div class="phone__notch"></div>
         <div class="phone__screen" id="mapScreen"></div>
@@ -269,18 +463,15 @@ Column {
 
     <div class="mapping__controls">
       <button class="btn btn--ghost" id="mapReset">↺ เริ่มใหม่</button>
-      <button class="btn btn--primary" id="mapStep">▶ แปลบรรทัดถัดไป</button>
-      <button class="btn btn--ghost" id="mapAll">⏩ แปลทั้งหมด</button>
+      <button class="btn btn--primary" id="mapStep">▶ อ่านบรรทัดถัดไป</button>
+      <button class="btn btn--ghost" id="mapAll">⏩ อ่านทั้งหมด</button>
     </div>
   </div>
-</section>
 
-<!-- ============ PLAYGROUND ============ -->
-<section class="section" id="playground">
-  <div class="section__head reveal">
-    <span class="kicker">05 — ลองเล่นเอง</span>
-    <h2>คุณคือเซิร์ฟเวอร์ — แก้ JSON แล้วดู UI เปลี่ยนสด ๆ</h2>
-    <p>หน้าจอทางขวาถูกสร้างจาก JSON ทางซ้ายล้วน ๆ ไม่มี HTML ที่เขียนตายตัวไว้เลย</p>
+  <!-- 06.3 playground -->
+  <div class="section__head section__head--sub reveal">
+    <h3>ลองเขียนแบบแปลนเองก็ได้</h3>
+    <p>แก้ข้อความทางซ้าย แล้วหน้าจอทางขวาจะเปลี่ยนทันที — ไม่มีหน้าตาที่เขียนตายตัวไว้เลย</p>
   </div>
 
   <div class="playground reveal">
@@ -290,23 +481,20 @@ Column {
         <button class="chip" data-preset="product">หน้าสินค้า</button>
         <button class="chip" data-preset="promo">หน้าโปรโมชัน</button>
         <button class="chip" data-preset="profile">หน้าโปรไฟล์</button>
-        <button class="chip chip--warn" data-preset="unknown">component ที่ไม่รู้จัก</button>
+        <button class="chip chip--warn" data-preset="unknown">สั่งชิ้นที่แอปไม่มี</button>
       </div>
-      <textarea id="pgInput" spellcheck="false" aria-label="แก้ไข JSON ของหน้าจอ"></textarea>
+      <textarea id="pgInput" spellcheck="false" aria-label="แก้ไขแบบแปลนของหน้าจอ"></textarea>
       <div class="playground__status" id="pgStatus"></div>
       <details class="playground__docs">
-        <summary>ชนิด component ที่ใช้ได้ (schema ย่อ)</summary>
+        <summary>ชิ้นส่วนที่ใช้ได้ทั้งหมด</summary>
         <ul>
-          <li><code>text</code> — <code>value</code>, <code>variant</code>: title / body / caption</li>
-          <li><code>button</code> — <code>value</code>, <code>tone</code>: primary / secondary / danger</li>
-          <li><code>image</code> — <code>label</code> (อีโมจิ), <code>height</code></li>
-          <li><code>card</code> — <code>children</code>: [...]</li>
-          <li><code>row</code> — <code>children</code>: [...] (วางแนวนอน)</li>
-          <li><code>badge</code> — <code>value</code>, <code>tone</code></li>
-          <li><code>rating</code> — <code>value</code> (0–5), <code>count</code></li>
-          <li><code>input</code> — <code>placeholder</code></li>
-          <li><code>list</code> — <code>items</code>: ["...", "..."]</li>
-          <li><code>divider</code>, <code>spacer</code></li>
+          <li><code>text</code> — ข้อความ (<code>variant</code>: title / body / caption)</li>
+          <li><code>button</code> — ปุ่ม (<code>tone</code>: primary / secondary / danger)</li>
+          <li><code>image</code> — รูป (<code>label</code> ใส่อีโมจิได้)</li>
+          <li><code>card</code> / <code>row</code> — กล่องและการวางแนวนอน (<code>children</code>)</li>
+          <li><code>badge</code> — ป้ายเล็ก · <code>rating</code> — คะแนนดาว</li>
+          <li><code>input</code> — ช่องกรอก · <code>list</code> — รายการ</li>
+          <li><code>divider</code> — เส้นคั่น · <code>spacer</code> — ช่องว่าง</li>
         </ul>
       </details>
     </div>
@@ -316,145 +504,39 @@ Column {
         <div class="phone__notch"></div>
         <div class="phone__screen" id="pgScreen"></div>
       </div>
-      <p class="playground__caption">พิมพ์แล้วเรนเดอร์ทันที — นี่คือสิ่งที่แอปจริงทำทุกครั้งที่ได้รับ response</p>
+      <p class="playground__caption">พิมพ์แล้วเห็นผลทันที — นี่คือสิ่งที่แอปจริงทำทุกครั้งที่ได้รับแบบแปลน</p>
     </div>
-  </div>
-</section>
-
-<!-- ============ INSTANT UPDATE ============ -->
-<section class="section section--alt" id="update">
-  <div class="section__head reveal">
-    <span class="kicker">06 — พลังที่แท้จริง</span>
-    <h2>เปลี่ยนหน้าจอผู้ใช้ โดยไม่ต้องปล่อยแอปเวอร์ชันใหม่</h2>
-    <p>ลองแก้ค่าในแผงควบคุมฝั่งเซิร์ฟเวอร์ แล้วสังเกตมือถือของผู้ใช้ ซึ่งยังเป็นแอปเวอร์ชันเดิมตลอดทั้งเดโม</p>
-  </div>
-
-  <div class="ota reveal">
-    <div class="ota__server">
-      <div class="ota__panelhead">
-        <h3>🛰️ แผงควบคุมบนเซิร์ฟเวอร์</h3>
-        <span class="tag" id="otaServerVer">config v1</span>
-      </div>
-
-      <label class="field">
-        <span>ข้อความหัวเรื่อง</span>
-        <input type="text" id="otaTitle" value="รองเท้าวิ่ง Aero X" maxlength="40">
-      </label>
-
-      <label class="field">
-        <span>ข้อความบนปุ่ม CTA</span>
-        <input type="text" id="otaCta" value="ซื้อเลย ฿2,490" maxlength="30">
-      </label>
-
-      <label class="field">
-        <span>โทนสีปุ่ม</span>
-        <select id="otaTone">
-          <option value="primary">primary (ฟ้า-เขียว)</option>
-          <option value="secondary">secondary (เทา)</option>
-          <option value="danger">danger (แดง — เร่งการตัดสินใจ)</option>
-        </select>
-      </label>
-
-      <div class="field field--switches">
-        <label class="switch"><input type="checkbox" id="otaBadge"><span></span>แสดงป้าย “ลด 20%”</label>
-        <label class="switch"><input type="checkbox" id="otaBanner"><span></span>แทรกแบนเนอร์แคมเปญไว้บนสุด</label>
-        <label class="switch"><input type="checkbox" id="otaReview" checked><span></span>แสดงคะแนนรีวิว</label>
-      </div>
-
-      <div class="ota__actions">
-        <button class="btn btn--primary" id="otaDeploy">💾 บันทึก &amp; deploy config</button>
-        <button class="btn btn--ghost" id="otaFetch">🔄 ผู้ใช้เปิดแอป (ดึง config)</button>
-      </div>
-      <p class="ota__hint" id="otaHint">แก้ค่าด้านบน แล้วกด “บันทึก &amp; deploy” — สังเกตว่ามือถือยังไม่เปลี่ยนจนกว่าจะดึง config ใหม่</p>
-    </div>
-
-    <div class="ota__wire" aria-hidden="true"><span class="ota__packet" id="otaPacket">{ }</span></div>
-
-    <div class="ota__client">
-      <div class="ota__panelhead">
-        <h3>📱 มือถือผู้ใช้</h3>
-        <span class="tag tag--fixed">app v1.0.0 (ไม่เคยอัปเดต)</span>
-      </div>
-      <div class="phone">
-        <div class="phone__notch"></div>
-        <div class="phone__screen" id="otaScreen"></div>
-      </div>
-      <span class="tag" id="otaClientVer">กำลังใช้ config v1</span>
-    </div>
-  </div>
-</section>
-
-<!-- ============ TRADEOFF ============ -->
-<section class="section" id="tradeoff">
-  <div class="section__head reveal">
-    <span class="kicker">07 — ต้องแลกกับอะไร</span>
-    <h2>ไม่มีสถาปัตยกรรมไหนฟรี</h2>
-    <p>SDUI แก้ปัญหาเรื่องความเร็วในการเปลี่ยนแปลง แต่ก็ย้ายความซับซ้อนไปไว้อีกที่หนึ่ง</p>
-  </div>
-
-  <div class="cards reveal">
-    <article class="card card--good">
-      <h3>✅ ได้อะไร</h3>
-      <ul>
-        <li><b>ปล่อยของเร็วมาก</b> — เปลี่ยน UI ได้ในระดับวินาที ไม่ผูกกับรอบ release</li>
-        <li><b>ความสม่ำเสมอข้ามแพลตฟอร์ม</b> — แหล่งความจริงเดียวคือ JSON</li>
-        <li><b>ทดลองได้ถูก</b> — A/B test, personalization, โปรโมชันตามช่วงเวลา</li>
-        <li><b>ย้อนกลับง่าย</b> — ถ้าพัง แค่ rollback config ไม่ต้อง hotfix แอป</li>
-        <li><b>ทีมธุรกิจ/ดีไซน์ขยับเองได้</b> ผ่าน CMS โดยไม่รบกวนทีมแอป</li>
-      </ul>
-    </article>
-    <article class="card card--bad">
-      <h3>⚠️ เสียอะไร</h3>
-      <ul>
-        <li><b>ต้องลงทุนสร้างระบบพื้นฐาน</b> — schema, renderer, CMS, เครื่องมือ preview</li>
-        <li><b>เวอร์ชันซับซ้อน</b> — แอปเก่าต้องรอด แม้เจอ component ที่ยังไม่รู้จัก</li>
-        <li><b>ดีบักยากขึ้น</b> — บั๊กอาจอยู่ใน JSON ไม่ใช่ในโค้ด</li>
-        <li><b>เสี่ยงพังทั้งระบบ</b> — config ผิดตัวเดียวกระทบผู้ใช้ทุกคนทันที</li>
-        <li><b>ต้องพึ่งเครือข่าย</b> — ต้องมี cache/offline fallback เสมอ</li>
-        <li><b>ไม่เหมาะกับหน้าจอที่ interactive สูง</b> เช่น กล้อง แผนที่ เกม</li>
-      </ul>
-    </article>
-    <article class="card card--tip">
-      <h3>🎯 ใช้เมื่อไหร่ถึงคุ้ม</h3>
-      <ul>
-        <li>หน้าจอที่ <b>เปลี่ยนบ่อยตามธุรกิจ</b> — หน้าแรก, ฟีด, หน้าโปรโมชัน, onboarding</li>
-        <li>มีหลายแพลตฟอร์มที่ต้อง <b>เหมือนกันเป๊ะ</b></li>
-        <li>ทำ <b>experiment บ่อย</b> จนรอบ release ตามไม่ทัน</li>
-        <li class="muted">ไม่คุ้มถ้า: แอปเล็ก ทีมเดียว หน้าจอนิ่ง ปล่อยอัปเดตได้อยู่แล้ว</li>
-      </ul>
-      <p class="card__foot">คำแนะนำที่ใช้กันจริง: <b>ผสมกัน</b> — ทำ SDUI เฉพาะหน้าจอที่เปลี่ยนบ่อย ส่วนหน้าจอ core ยังเขียน native ตามปกติ</p>
-    </article>
   </div>
 
   <div class="pitfalls reveal">
-    <h3>กับดักที่ต้องออกแบบเผื่อไว้ตั้งแต่วันแรก</h3>
+    <h3>เรื่องที่ทีมเทคต้องออกแบบเผื่อไว้ตั้งแต่วันแรก</h3>
     <div class="pitfalls__grid">
-      <div><b>1. Forward compatibility</b><p>ส่ง <code>type</code> ที่แอปเก่าไม่รู้จัก ต้องข้ามเงียบ ๆ หรือแสดง fallback ไม่ใช่หน้าจอว่างหรือแครช</p></div>
-      <div><b>2. Cache &amp; offline</b><p>เก็บ config ล่าสุดไว้ในเครื่อง เปิดแอปครั้งถัดไปวาดจาก cache ก่อน แล้วค่อยรีเฟรชเบื้องหลัง</p></div>
-      <div><b>3. Schema versioning</b><p>ใส่ <code>minAppVersion</code> / <code>schemaVersion</code> ให้เซิร์ฟเวอร์เลือกส่งเลย์เอาต์ที่แอปรุ่นนั้นรองรับ</p></div>
-      <div><b>4. Action ไม่ใช่โค้ด</b><p>ส่งเป็น <code>{"action":"navigate","to":"/cart"}</code> ให้แอปตีความ — อย่าส่งสคริปต์มารัน (ช่องโหว่ความปลอดภัย)</p></div>
-      <div><b>5. Validate ก่อน deploy</b><p>ตรวจ JSON ด้วย schema ใน CI + มีหน้า preview ให้ดูก่อน เพราะปล่อยผิดคือกระทบทุกคนทันที</p></div>
-      <div><b>6. วัดผลได้</b><p>ฝัง <code>trackingId</code> ในแต่ละ component เพื่อรู้ว่าเลย์เอาต์ไหนทำงานได้ดีกว่ากัน</p></div>
+      <div><b>1. แอปรุ่นเก่าต้องรอด</b><p>ถ้าแบบแปลนสั่งชิ้นที่แอปรุ่นนั้นไม่มี ต้องข้ามเงียบ ๆ ไม่ใช่จอขาวหรือแครช</p></div>
+      <div><b>2. เก็บสำรองไว้ในเครื่อง</b><p>จำแบบแปลนล่าสุดไว้ เปิดแอปครั้งหน้าวาดจากของเก่าก่อน แล้วค่อยอัปเดตเบื้องหลัง</p></div>
+      <div><b>3. บอกรุ่นให้ชัด</b><p>ให้เซิร์ฟเวอร์รู้ว่าแอปเครื่องนี้เป็นรุ่นไหน แล้วส่งแบบแปลนที่รุ่นนั้นรองรับ</p></div>
+      <div><b>4. ส่งได้แค่ “คำสั่ง” ห้ามส่งโปรแกรม</b><p>ส่งว่า “กดแล้วไปหน้าตะกร้า” ไม่ใช่ส่งโปรแกรมมารัน เพราะเป็นช่องโหว่ความปลอดภัย</p></div>
+      <div><b>5. ตรวจก่อนกดบันทึก</b><p>มีหน้าดูตัวอย่างและระบบตรวจความถูกต้อง เพราะพลาดครั้งเดียวกระทบทุกคนทันที</p></div>
+      <div><b>6. วัดผลได้</b><p>ติดรหัสไว้ในแต่ละชิ้น เพื่อรู้ว่าหน้าจอแบบไหนทำให้คนกดซื้อมากกว่า</p></div>
     </div>
   </div>
 </section>
 
-<!-- ============ RECAP ============ -->
+<!-- ============ สรุป ============ -->
 <section class="section section--alt" id="recap">
   <div class="section__head reveal">
     <span class="kicker">สรุป</span>
-    <h2>จำแค่ประโยคเดียว</h2>
+    <h2>จำแค่ภาพเดียว</h2>
   </div>
   <p class="recap reveal">
-    เซิร์ฟเวอร์ส่ง <b>“พิมพ์เขียว”</b> มาเป็น JSON → ไคลเอนต์มี <b>“กล่องชิ้นส่วน”</b> เป็นโค้ด native →
-    ไคลเอนต์แค่ <b>ประกอบตามพิมพ์เขียว</b> → เปลี่ยนพิมพ์เขียวเมื่อไหร่ หน้าจอผู้ใช้ก็เปลี่ยนทันทีโดยไม่ต้องอัปเดตแอป
+    แอปมี <b>กล่องเลโก้</b> อยู่แล้ว → เซิร์ฟเวอร์ส่ง <b>แบบแปลน</b> มาบอกว่าจะต่ออะไร →
+    อยากเปลี่ยนหน้าจอก็ <b>ส่งแบบแปลนใหม่</b> → ผู้ใช้เห็นของใหม่ <b>โดยไม่ต้องอัปเดตแอป</b>
   </p>
 </section>
 
 </main>
 
 <footer class="footer">
-  <p>สร้างด้วย HTML + CSS + JavaScript ล้วน ไม่มีไลบรารีภายนอก · เปิดไฟล์ <code>index.html</code> ได้เลย</p>
+  <p>หน้านี้สร้างด้วย HTML + CSS + JavaScript ล้วน ไม่มีไลบรารีภายนอก · เปิดไฟล์ <code>index.html</code> ได้เลย</p>
 </footer>
 
 <script src="assets/js/renderer.js"></script>
