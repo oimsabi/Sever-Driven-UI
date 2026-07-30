@@ -41,17 +41,25 @@
   /* ---------------------------------------------------------- CHROME */
   function initChrome() {
     var progress = $('#scrollProgress');
-    var links = $$('.nav__links a');
-    var sections = links.map(function (a) { return $(a.getAttribute('href')); }).filter(Boolean);
+
+    /* จับคู่ลิงก์กับ section เป็นคู่ ๆ ไม่ใช่สองอาร์เรย์แยกกัน
+       เพราะเมนูมีลิงก์ข้ามหน้า (เช่น infographic.html) ที่ไม่มี section รองรับ
+       ถ้าใช้ .filter() กับอาร์เรย์เดียว ดัชนีสองฝั่งจะเลื่อนไม่ตรงกัน
+       แล้วไฮไลต์เมนูจะไปสว่างผิดอัน */
+    var pairs = $$('.nav__links a').map(function (a) {
+      var href = a.getAttribute('href') || '';
+      var sec = href.charAt(0) === '#' ? document.getElementById(href.slice(1)) : null;
+      return sec ? { link: a, sec: sec } : null;
+    }).filter(Boolean);
 
     function onScroll() {
       var max = document.documentElement.scrollHeight - window.innerHeight;
-      progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
+      if (progress) progress.style.width = (max > 0 ? (window.scrollY / max) * 100 : 0) + '%';
 
       var pos = window.scrollY + window.innerHeight * 0.35;
       var current = -1;
-      sections.forEach(function (sec, i) { if (sec.offsetTop <= pos) current = i; });
-      links.forEach(function (a, i) { a.classList.toggle('is-active', i === current); });
+      pairs.forEach(function (p, i) { if (p.sec.offsetTop <= pos) current = i; });
+      pairs.forEach(function (p, i) { p.link.classList.toggle('is-active', i === current); });
     }
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);

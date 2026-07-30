@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Server-Driven UI สรุปใน 1 หน้า — Infographic</title>
+<meta name="description" content="อินโฟกราฟิกสรุป Server-Driven UI ใน 1 หน้า: ปัญหา แนวคิด ผลลัพธ์ ข้อดีข้อเสีย และควรใช้เมื่อไหร่ อ่านจบในหนึ่งนาที">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/infographic.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+</head>
+<body class="ig-body">
+
+<header class="nav nav--slim">
+  <a class="nav__brand" href="index.html">
+    <span class="nav__logo">🧩</span>
+    <span>Server-Driven UI</span>
+  </a>
+  <a class="btn btn--ghost nav--slim__cta" href="index.html">← ดูหน้าเต็ม (มีแอนิเมชัน + ลองเล่นได้)</a>
+</header>
+
+<main class="poster">
+
+  <!-- ---------- หัวเรื่อง ---------- -->
+  <div class="ig-head">
+    <span class="ig-eyebrow">สรุปใน 1 หน้า</span>
+    <h1>Server-Driven UI</h1>
+    <p class="ig-sub">หน้าตาแอป <b>ไม่ได้ฝังอยู่ในแอป</b> แต่ถูก <b>ส่งมาจากเซิร์ฟเวอร์</b><br>
+      จึงเปลี่ยนหน้าจอผู้ใช้ได้โดยไม่ต้องปล่อยแอปเวอร์ชันใหม่</p>
+  </div>
+
+  <!-- ---------- 1 · ปัญหา ---------- -->
+  <section class="band">
+    <div class="band__head">
+      <span class="band__no">1</span>
+      <h2>ปัญหา</h2>
+    </div>
+    <p class="band__lead">“ขอเปลี่ยนคำบนปุ่มหน่อย” — คำเดียว แต่ต้องเดินครบทุกขั้น</p>
+
+    <ol class="chain">
+      <li class="chain__item"><b>ออกแบบ</b><span>ครึ่งวัน</span></li>
+      <li class="chain__item"><b>เขียนโค้ดในแอป</b><span>1 วัน</span></li>
+      <li class="chain__item"><b>ทดสอบ</b><span>1 วัน</span></li>
+      <li class="chain__item chain__item--out"><b>รอสโตร์ตรวจ</b><span>1–3 วัน</span></li>
+      <li class="chain__item chain__item--out"><b>ปล่อยเวอร์ชันใหม่</b><span>ทันที</span></li>
+      <li class="chain__item chain__item--out"><b>รอผู้ใช้กดอัปเดต</b><span>3 วัน–∞</span></li>
+    </ol>
+
+    <div class="alarm">
+      <b>≈ 7 วัน</b>
+      <span>และ <u>3 ขั้นสุดท้าย (สีส้ม) อยู่นอกการควบคุมของทีม</u> —
+        ต้องรอสโตร์ตรวจ และรอผู้ใช้กดอัปเดตเอง ซึ่งบางคนไม่กดเลยตลอดไป</span>
+    </div>
+  </section>
+
+  <!-- ---------- 2 · แนวคิด ---------- -->
+  <section class="band">
+    <div class="band__head">
+      <span class="band__no">2</span>
+      <h2>แนวคิด</h2>
+    </div>
+    <p class="band__lead">แยก “หน้าตา” ออกจาก “ตัวแอป” — คิดเป็นเลโก้</p>
+
+    <div class="idea">
+      <div class="idea__card">
+        <span class="idea__icon" aria-hidden="true">🧱</span>
+        <b>กล่องเลโก้</b>
+        <p>แอปมีชิ้นส่วนเตรียมไว้แล้ว<br>ปุ่ม · รูป · ป้าย · ดาว · การ์ด</p>
+        <span class="idea__where">อยู่ในแอป</span>
+      </div>
+      <span class="idea__plus" aria-hidden="true">+</span>
+      <div class="idea__card idea__card--plan">
+        <span class="idea__icon" aria-hidden="true">📋</span>
+        <b>แบบแปลน</b>
+        <p>บอกว่าหยิบชิ้นไหน<br>เรียงยังไง เขียนอะไร</p>
+        <span class="idea__where idea__where--srv">มาจากเซิร์ฟเวอร์</span>
+      </div>
+      <span class="idea__eq" aria-hidden="true">=</span>
+      <div class="idea__card idea__card--out">
+        <span class="idea__icon" aria-hidden="true">📱</span>
+        <b>หน้าจอ</b>
+        <p>แอปประกอบตามแบบแปลน<br>ด้วยชิ้นส่วนที่มีอยู่</p>
+        <span class="idea__where idea__where--ok">ผู้ใช้เห็นทันที</span>
+      </div>
+    </div>
+
+    <p class="idea__note">
+      เปลี่ยนหน้าจอ = <b>ส่งแบบแปลนใหม่</b> · ไม่ต้องส่งกล่องเลโก้ใหม่ = <b>ไม่ต้องอัปเดตแอป</b>
+    </p>
+  </section>
+
+  <!-- ---------- 3 · ผลลัพธ์ ---------- -->
+  <section class="band">
+    <div class="band__head">
+      <span class="band__no">3</span>
+      <h2>ผลลัพธ์</h2>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <b>7 วัน <i>→</i> 3 นาที</b>
+        <span>เวลาที่ใช้เปลี่ยนหน้าจอหนึ่งครั้ง</span>
+      </div>
+      <div class="stat">
+        <b>0</b>
+        <span>ครั้งที่ต้องปล่อยแอปเวอร์ชันใหม่</span>
+      </div>
+      <div class="stat">
+        <b>1</b>
+        <span>แบบแปลน ใช้ได้ทั้ง iOS · Android · เว็บ</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 4 · เทียบกัน ---------- -->
+  <section class="band">
+    <div class="band__head">
+      <span class="band__no">4</span>
+      <h2>เทียบกัน</h2>
+    </div>
+    <div class="vs">
+      <div class="vs__col">
+        <h3>📱 แบบเดิม</h3>
+        <ul>
+          <li>หน้าตาถูกเย็บติดไปกับตัวแอป</li>
+          <li>แก้หน้าตา = ปล่อยแอปเวอร์ชันใหม่</li>
+          <li>iOS / Android / เว็บ ต้องแก้แยกกัน</li>
+          <li>ผู้ใช้ที่ไม่อัปเดต เห็นของเก่าตลอดไป</li>
+        </ul>
+      </div>
+      <div class="vs__col vs__col--new">
+        <h3>🛰️ Server-Driven UI</h3>
+        <ul>
+          <li>หน้าตามาจากเซิร์ฟเวอร์ตอนเปิดแอป</li>
+          <li>แก้หน้าตา = ส่งแบบแปลนใหม่</li>
+          <li>แก้ที่เดียว เปลี่ยนพร้อมกันทุกแพลตฟอร์ม</li>
+          <li>ทุกคนเห็นของใหม่ในการเปิดแอปครั้งถัดไป</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 5 · ได้ / เสีย ---------- -->
+  <section class="band">
+    <div class="band__head">
+      <span class="band__no">5</span>
+      <h2>ได้อะไร / เสียอะไร</h2>
+    </div>
+    <div class="pros">
+      <div class="pros__col pros__col--good">
+        <h3>✅ ได้</h3>
+        <ul>
+          <li>เปลี่ยนหน้าจอได้ในไม่กี่นาที</li>
+          <li>ทุกแพลตฟอร์มเหมือนกันเป๊ะ</li>
+          <li>ทดลอง A/B และย้อนกลับได้เร็ว</li>
+          <li>ทีมธุรกิจแก้เองได้ ไม่ต้องรอคิวทีมแอป</li>
+        </ul>
+      </div>
+      <div class="pros__col pros__col--bad">
+        <h3>⚠️ เสีย</h3>
+        <ul>
+          <li>ต้องลงทุนสร้างระบบพื้นฐานก่อน</li>
+          <li>พลาดครั้งเดียวกระทบผู้ใช้ทุกคนทันที</li>
+          <li>ชิ้นส่วน<em>ใหม่</em> ยังต้องอัปเดตแอปเหมือนเดิม</li>
+          <li>ต้องมีเน็ต + แผนสำรองเวลาโหลดไม่ได้</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- 6 · ใช้เมื่อไหร่ ---------- -->
+  <section class="band band--last">
+    <div class="band__head">
+      <span class="band__no">6</span>
+      <h2>ควรใช้เมื่อไหร่</h2>
+    </div>
+    <div class="when">
+      <div class="when__yes">
+        <b>คุ้ม</b>
+        <p>หน้าที่เปลี่ยนบ่อยตามธุรกิจ (หน้าแรก · โปรโมชัน · แคมเปญ) ·
+           มีหลายแพลตฟอร์มที่ต้องเหมือนกัน · อยากทดลองบ่อยจนรอบปล่อยแอปตามไม่ทัน</p>
+      </div>
+      <div class="when__no">
+        <b>ไม่คุ้ม</b>
+        <p>แอปเล็ก ทีมเดียว · หน้าจอนิ่ง ไม่ค่อยแก้ ·
+           หน้าที่ interactive สูงอย่างกล้อง แผนที่ เกม</p>
+      </div>
+    </div>
+    <p class="when__mix">
+      ที่ใช้กันจริงคือ <b>ผสมกัน</b> — ทำแบบนี้เฉพาะหน้าจอที่เปลี่ยนบ่อย ส่วนหน้าหลักยังเขียนแบบเดิม
+    </p>
+  </section>
+
+  <!-- ---------- ปิดท้าย ---------- -->
+  <div class="ig-foot">
+    <p><b>อยากเห็นภาพจริง ๆ?</b> หน้าเต็มมีแอนิเมชันทีละขั้น และมีแผงควบคุมให้ลองเปลี่ยนหน้าจอผู้ใช้ด้วยมือตัวเอง</p>
+    <a class="btn btn--primary" href="index.html">▶ ไปหน้าเต็ม</a>
+    <p class="ig-foot__hint">หน้านี้สั่งพิมพ์หรือบันทึกเป็น PDF ได้เลย (Ctrl/⌘ + P) — จัดหน้าไว้ให้แล้ว</p>
+    <p class="ig-foot__print">ฉบับเต็มที่มีแอนิเมชันทีละขั้น และแผงควบคุมให้ลองเปลี่ยนหน้าจอเอง อยู่ที่หน้าแรกของเว็บนี้</p>
+  </div>
+
+</main>
+
+</body>
+</html>

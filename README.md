@@ -3,7 +3,14 @@
 หน้าเว็บภาษาไทยที่อธิบายแนวคิด **Server-Driven UI (SDUI)** ด้วยแอนิเมชันแบบโต้ตอบได้
 เขียนด้วย HTML + CSS + JavaScript ล้วน **ไม่มีไลบรารีหรือ build step**
 
-เปิดใช้งานได้ทันทีโดยดับเบิลคลิกไฟล์ `index.html`
+มี 2 หน้า:
+
+| หน้า | ไว้ทำอะไร |
+|------|-----------|
+| **`index.html`** | ฉบับเต็ม — แอนิเมชันทีละขั้น + แผงควบคุมให้ลองเล่นเอง |
+| **`infographic.html`** | สรุป 1 หน้า อ่านจบในนาทีเดียว · ไม่ใช้ JavaScript เลย · สั่งพิมพ์/บันทึกเป็น PDF ได้ |
+
+เปิดใช้งานได้ทันทีโดยดับเบิลคลิกไฟล์
 (หรือรัน `python3 -m http.server` แล้วเข้า `http://localhost:8000`)
 
 ---
@@ -29,11 +36,16 @@
 ## โครงสร้างไฟล์
 
 ```
-index.html                 โครงหน้าและเนื้อหาทั้งหมด
-assets/css/style.css       สไตล์ + คีย์เฟรมแอนิเมชันทุกตัว
-assets/js/renderer.js      ตัวแปลง JSON → DOM (หัวใจของฝั่งไคลเอนต์ใน SDUI)
-assets/js/main.js          ตัวควบคุมแต่ละส่วน (showcase / journey / race / flow / mapping / playground / OTA)
+index.html                    ฉบับเต็ม
+infographic.html              สรุป 1 หน้า (ไม่มี JS)
+assets/css/style.css          สไตล์หลัก + token + คีย์เฟรมแอนิเมชัน
+assets/css/infographic.css    เลย์เอาต์ของหน้าสรุป + สไตล์สำหรับสั่งพิมพ์
+assets/js/renderer.js         ตัวแปลง JSON → DOM (หัวใจของฝั่งไคลเอนต์ใน SDUI)
+assets/js/main.js             ตัวควบคุมแต่ละส่วน (showcase / journey / race / flow / mapping / playground / OTA)
 ```
+
+หน้าสรุปโหลด `style.css` ต่อด้วย `infographic.css` เพื่อใช้ตัวแปรสี ฟอนต์ และปุ่มร่วมกัน
+จะได้ไม่ต้องประกาศ design token ซ้ำสองที่
 
 `renderer.js` แยกออกมาโดยตั้งใจ เพราะมันคือสิ่งเดียวกับที่แอปจริงต้องเขียนเป็น native code —
 ส่วนที่เหลือของหน้าเว็บเป็นแค่ "เปลือก" ที่ใช้สาธิตมันจากหลาย ๆ มุม

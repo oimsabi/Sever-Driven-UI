@@ -121,6 +121,12 @@ button, summary { min-height: var(--tap); }
 .nav__links a.is-active {
   color: #04131a; background: linear-gradient(120deg, var(--brand), var(--brand-2)); font-weight: 700;
 }
+/* ลิงก์ข้ามหน้า — แยกหน้าตาให้เห็นว่าไม่ใช่การเลื่อนไปหัวข้อในหน้านี้ */
+.nav__links-alt {
+  color: var(--accent) !important;
+  border: 1px solid rgba(167, 139, 250, .4);
+  background: rgba(167, 139, 250, .1);
+}
 
 .motion-toggle {
   flex: none;
