@@ -247,18 +247,18 @@
   /* ------------------------------------------------------- 03 · RACE */
   var RACE = {
     classic: [
-      { ms: 900,  clock: '+2 ชั่วโมง' },
-      { ms: 1000, clock: '+1 วัน' },
-      { ms: 700,  clock: '+1 วัน 2 ชม.' },
-      { ms: 1500, clock: '+4 วัน' },
-      { ms: 700,  clock: '+4 วัน 6 ชม.' },
-      { ms: 1500, clock: '+7 วัน ขึ้นไป' }
+      { ms: 900,  clock: '+1 วัน' },
+      { ms: 1000, clock: '+3 วัน' },
+      { ms: 700,  clock: '+5 วัน' },
+      { ms: 1500, clock: '+7 วัน' },
+      { ms: 700,  clock: '+7 วัน' },
+      { ms: 1500, clock: '+1–2 สัปดาห์' }
     ],
     sdui: [
       { ms: 800, clock: '+2 นาที' },
-      { ms: 500, clock: '+2 นาที 20 วิ' },
-      { ms: 600, clock: '+2 นาที 21 วิ' },
-      { ms: 500, clock: 'รวม ~3 นาที' }
+      { ms: 500, clock: '+3 นาที' },
+      { ms: 600, clock: '+3 นาที' },
+      { ms: 500, clock: 'ระดับนาที' }
     ]
   };
 
@@ -317,8 +317,8 @@
       startBtn.textContent = '⏳ กำลังจำลอง…';
 
       Promise.all([
-        runLane('classic', RACE.classic, '🐢 กว่าจะถึงผู้ใช้ทุกคน ~7 วัน และบางคนไม่กดอัปเดตเลย', false, sig),
-        runLane('sdui', RACE.sdui, '⚡ ผู้ใช้ทุกคนเห็นหน้าจอใหม่ภายในไม่กี่นาที', true, sig)
+        runLane('classic', RACE.classic, '🐢 กว่าจะถึงผู้ใช้ทุกคน 1–2 สัปดาห์ และบางคนไม่กดอัปเดตเลย', false, sig),
+        runLane('sdui', RACE.sdui, '⚡ ผู้ใช้ทุกคนเห็นหน้าจอใหม่ในระดับนาที', true, sig)
       ]).then(function () {
         startBtn.disabled = false;
         startBtn.textContent = '↻ จำลองอีกครั้ง';

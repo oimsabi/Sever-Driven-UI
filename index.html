@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>เปลี่ยนหน้าจอแอปได้ในไม่กี่นาที — Server-Driven UI อธิบายด้วยภาพ</title>
-<meta name="description" content="เริ่มจากผลลัพธ์ที่เห็น แล้วไล่ย้อนว่ากว่าจะได้หน้าจอนั้นต้องผ่านอะไร และทำไม Server-Driven UI ทำให้เปลี่ยนหน้าจอได้ในไม่กี่นาที อธิบายด้วยแอนิเมชันแบบไม่ต้องมีพื้นฐานเทคนิค">
+<title>เปลี่ยนหน้าจอแอปได้ในระดับนาที — Server-Driven UI อธิบายด้วยภาพ</title>
+<meta name="description" content="เริ่มจากผลลัพธ์ที่เห็น แล้วไล่ย้อนว่ากว่าจะได้หน้าจอนั้นต้องผ่านอะไร และทำไม Server-Driven UI ทำให้เปลี่ยนหน้าจอได้ในระดับนาที อธิบายด้วยแอนิเมชันแบบไม่ต้องมีพื้นฐานเทคนิค">
 <link rel="stylesheet" href="assets/css/style.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
 </head>
@@ -48,11 +48,11 @@
 
     <div class="hero__copy">
       <span class="pill">อธิบายด้วยภาพ · ไม่ต้องมีพื้นฐานเทคนิค</span>
-      <h1>หน้าจอนี้ <em>เปลี่ยนได้ในไม่กี่นาที</em><br>โดยที่ผู้ใช้ไม่ต้องอัปเดตแอป</h1>
+      <h1>หน้าจอนี้ <em>เปลี่ยนได้ในระดับนาที</em><br>โดยที่ผู้ใช้ไม่ต้องอัปเดตแอป</h1>
       <p class="hero__lead">
         ปกติแล้วการขอเปลี่ยนแค่ “คำบนปุ่ม” ในแอป ใช้เวลาเป็น <strong>สัปดาห์</strong>
         และมีหลายขั้นตอนที่ <strong>ไม่ได้อยู่ในมือเราเลย</strong>
-        หน้านี้จะพาไล่ดูว่าทำไมถึงนานขนาดนั้น แล้วมีวิธีทำให้เหลือ <em>ไม่กี่นาที</em> ได้อย่างไร
+        หน้านี้จะพาไล่ดูว่าทำไมถึงนานขนาดนั้น แล้วมีวิธีทำให้เหลือ <em>ระดับนาที</em> ได้อย่างไร
       </p>
       <div class="hero__cta">
         <a class="btn btn--primary" href="#howto">▶ เริ่มดูว่ากว่าจะได้หน้าจอนี้ ต้องทำอะไร</a>
@@ -60,8 +60,8 @@
         <a class="btn btn--ghost" href="infographic.html">📄 อ่านสรุป 1 หน้า</a>
       </div>
       <ul class="hero__stats">
-        <li><b>7+</b><span>วัน<br>แบบเดิม</span></li>
-        <li><b>~3</b><span>นาที<br>แบบใหม่</span></li>
+        <li><b>1–2</b><span>สัปดาห์<br>แบบเดิม</span></li>
+        <li><b>นาที</b><span>ถึงชั่วโมง<br>แบบใหม่</span></li>
         <li><b>0</b><span>ครั้งที่ต้อง<br>อัปเดตแอป</span></li>
       </ul>
     </div>
@@ -113,38 +113,38 @@
     </div>
 
     <ol class="journey__list" id="journeyList">
-      <li class="journey__step" data-j data-days="0.5">
+      <li class="journey__step" data-j data-days="1">
         <span class="journey__num">1</span>
         <div class="journey__body">
           <b>🎨 ดีไซเนอร์ ออกแบบหน้าจอ</b>
           <p>ตัดสินใจว่าอะไรอยู่ตรงไหน สีอะไร ตัวอักษรใหญ่แค่ไหน</p>
         </div>
-        <span class="journey__cost">~ครึ่งวัน</span>
+        <span class="journey__cost">~1 วัน</span>
       </li>
-      <li class="journey__step" data-j data-days="1">
+      <li class="journey__step" data-j data-days="2">
         <span class="journey__num">2</span>
         <div class="journey__body">
           <b>👩‍💻 โปรแกรมเมอร์ เขียนหน้าจอ “ฝังลงไปในตัวแอป”</b>
           <p>จุดนี้คือหัวใจของปัญหา — หน้าตาถูกเย็บติดไปกับตัวแอป
              จะแก้หน้าตา ก็ต้องแก้ตัวแอป</p>
         </div>
-        <span class="journey__cost">~1 วัน</span>
+        <span class="journey__cost">~2 วัน</span>
       </li>
-      <li class="journey__step" data-j data-days="1">
+      <li class="journey__step" data-j data-days="2">
         <span class="journey__num">3</span>
         <div class="journey__body">
           <b>🧪 ทีมทดสอบ ลองใช้ทุกรุ่นทุกขนาดจอ</b>
           <p>เพราะถ้าปล่อยแล้วพัง จะแก้ทันทีไม่ได้ ต้องวนใหม่ทั้งวง</p>
         </div>
-        <span class="journey__cost">~1 วัน</span>
+        <span class="journey__cost">~2 วัน</span>
       </li>
-      <li class="journey__step journey__step--out" data-j data-days="2">
+      <li class="journey__step journey__step--out" data-j data-days="3">
         <span class="journey__num">4</span>
         <div class="journey__body">
           <b>🏪 ส่งให้ App Store / Play Store ตรวจ</b>
           <p>รอเจ้าหน้าที่ของ Apple / Google อนุมัติ นานเท่าไหร่ก็ต้องรอ</p>
         </div>
-        <span class="journey__cost">1–3 วัน</span>
+        <span class="journey__cost">2–5 วัน</span>
       </li>
       <li class="journey__step journey__step--out" data-j data-days="0">
         <span class="journey__num">5</span>
@@ -219,6 +219,40 @@
     <p class="punch__sub">
       และเพราะแบบแปลนอยู่ในมือคุณเอง — ข้อ 4, 5, 6 ที่คุณคุมไม่ได้เมื่อกี้
       <em>หายไปทั้งหมด</em>
+    </p>
+  </div>
+
+  <!-- โจทย์ที่วิธีนี้แก้ได้ตรงที่สุด และเป็นเหตุผลที่ใช้กันจริงในงาน B2B -->
+  <div class="section__head section__head--sub reveal">
+    <h3>อีกโจทย์ที่วิธีนี้แก้ได้ตรงจุด: ลูกค้าแต่ละรายอยากได้ไม่เหมือนกัน</h3>
+    <p>ไม่ใช่แค่ “แก้ของเดิมให้เร็วขึ้น” แต่คือ “ทำของที่ต่างกันให้ลูกค้าหลายรายพร้อมกัน”</p>
+  </div>
+
+  <div class="tenants reveal">
+    <div class="tenants__engine">
+      <span>🧱 แอปตัวเดียว + Engine ชุดเดียว</span>
+      <i class="tenants__pipe" aria-hidden="true"></i>
+    </div>
+    <div class="tenants__row">
+      <div class="tenant">
+        <b>ลูกค้า A</b>
+        <i></i><i></i><i></i>
+        <span>3 ช่อง</span>
+      </div>
+      <div class="tenant">
+        <b>ลูกค้า B</b>
+        <i></i><i></i><i></i><i></i><i></i>
+        <span>5 ช่อง คนละชื่อ</span>
+      </div>
+      <div class="tenant">
+        <b>ลูกค้า C</b>
+        <i></i><i></i>
+        <span>2 ช่อง</span>
+      </div>
+    </div>
+    <p class="tenants__cap">
+      ฟอร์มไม่เหมือนกันสักราย แต่มาจากแอปตัวเดียวกัน — <b>ไม่ต้องแยกโปรเจกต์โค้ดต่อลูกค้า</b>
+      และรับลูกค้าใหม่โดย<b>ต้นทุนไม่โตตามจำนวนลูกค้า</b>
     </p>
   </div>
 
@@ -351,7 +385,7 @@
     <article class="card card--good">
       <h3>✅ ได้อะไร</h3>
       <ul>
-        <li><b>เปลี่ยนได้ในไม่กี่นาที</b> ไม่ผูกกับรอบปล่อยแอป</li>
+        <li><b>เปลี่ยนได้ในระดับนาที</b> ไม่ผูกกับรอบปล่อยแอป</li>
         <li><b>ทุกเครื่องเปลี่ยนพร้อมกัน</b> ทั้ง iPhone, Android, เว็บ</li>
         <li><b>ทดลองได้ถูก</b> เช่น ลองปุ่มสองแบบดูว่าคนกดแบบไหนมากกว่า</li>
         <li><b>พังก็ย้อนกลับได้เร็ว</b> กดกลับไปแบบแปลนเดิม ไม่ต้องแก้แอป</li>
@@ -372,6 +406,7 @@
     <article class="card card--tip">
       <h3>🎯 คุ้มเมื่อไหร่</h3>
       <ul>
+        <li><b>ลูกค้าหลายรายต้องการหน้าตาไม่เหมือนกัน</b> — ฟอร์ม เมนู หรือขั้นตอนที่ต่างกันรายต่อราย</li>
         <li>หน้าจอที่ <b>เปลี่ยนบ่อยตามธุรกิจ</b> — หน้าแรก โปรโมชัน แคมเปญ</li>
         <li>มีหลายแพลตฟอร์มที่ต้อง <b>เหมือนกันเป๊ะ</b></li>
         <li>อยาก <b>ทดลองบ่อย</b> จนรอบปล่อยแอปตามไม่ทัน</li>

@@ -473,6 +473,37 @@ button, summary { min-height: var(--tap); }
   85%, 100% { top: calc(100% - 4px); transform: translateX(-50%) scale(0); opacity: 0; }
 }
 
+/* --------------------------- ลูกค้าหลายรายจาก engine เดียว --------------------------- */
+.tenants { margin-bottom: 26px; }
+.tenants__engine { position: relative; text-align: center; padding-bottom: 22px; }
+.tenants__engine span {
+  display: inline-block; font-size: 13.5px; font-weight: 700; color: var(--brand);
+  background: rgba(45, 212, 191, .1); border: 1px solid rgba(45, 212, 191, .35);
+  padding: 8px 16px; border-radius: 999px;
+}
+/* เส้นแยกออกเป็นสามสาย สื่อว่า engine เดียวแตกไปหลายลูกค้า */
+.tenants__pipe {
+  position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 2px; height: 18px; background: var(--line);
+}
+.tenants__row { display: grid; gap: 10px; }
+.tenant {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: 14px;
+  display: grid; gap: 7px; align-content: start;
+}
+.tenant b { font-size: 13.5px; color: var(--text); }
+/* แต่ละแท่งคือหนึ่งช่องกรอกในฟอร์ม — จำนวนไม่เท่ากันคือประเด็นทั้งหมด */
+.tenant i {
+  display: block; height: 9px; border-radius: 4px;
+  background: linear-gradient(90deg, var(--surface-2), var(--line));
+}
+.tenant span { font-family: var(--mono); font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.tenants__cap {
+  margin: 14px 0 0; text-align: center; font-size: 13.5px; color: var(--text-dim); line-height: 1.8;
+}
+.tenants__cap b { color: var(--brand); }
+
 .punch {
   text-align: center; padding: 22px 18px; margin-bottom: 26px;
   background: linear-gradient(140deg, rgba(45, 212, 191, .12), rgba(167, 139, 250, .08));
@@ -988,6 +1019,7 @@ button, summary { min-height: var(--tap); }
   .journey__clock { flex: 0 0 auto; margin-left: auto; }
   .journey__toolbar .btn { flex: 0 0 auto; }
   .journey__insight { grid-template-columns: 1fr 1fr; }
+  .tenants__row { grid-template-columns: repeat(3, 1fr); }
   .lego { grid-template-columns: 1fr 54px 1fr; }
   .lego__arrow { width: auto; height: 4px; align-self: center; }
   .lego__dot { animation: legoRight 2.4s ease-in-out infinite; }
