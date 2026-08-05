@@ -77,12 +77,12 @@ assets/js/main.js             ตัวควบคุมแต่ละส่�
 
 ## การเปิดหน้าเว็บผ่าน GitHub Pages
 
-เว็บอยู่ที่ **https://oimsabi.github.io/Sever-Driven-UI/**
+เว็บอยู่ที่ **https://oimsabi.github.io/Server-Driven-UI/**
 
 deploy อัตโนมัติด้วย `.github/workflows/deploy-pages.yml` ทุกครั้งที่ push เข้า `main`
 (หรือกด Run workflow เองจากแท็บ Actions) เว็บเป็น static ล้วนจึงไม่มีขั้นตอน build
 
-ทุก path ในหน้าเว็บเป็น relative จึงเสิร์ฟจาก subpath `/Sever-Driven-UI/` ได้เลยโดยไม่ต้องแก้อะไร
+ทุก path ในหน้าเว็บเป็น relative จึงเสิร์ฟจาก subpath `/Server-Driven-UI/` ได้เลยโดยไม่ต้องแก้อะไร
 
 หมายเหตุ: repo ต้องเป็น public หรือใช้บัญชี GitHub Pro ขึ้นไป และตั้ง
 **Settings → Pages → Source: `GitHub Actions`** ไว้ จึงจะ deploy ได้
