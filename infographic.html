@@ -64,31 +64,32 @@
   <!-- ---------- 1 · ปัญหา ---------- -->
   <section class="band">
     <div class="band__head"><span class="band__no">1</span><h2>แก้ฟิลด์เดียว = รอ 1–2 สัปดาห์</h2></div>
+    <p class="band__say">แก้เรื่องเล็กแค่ไหน ก็ต้องเดินครบทุกขั้นเท่ากัน และครึ่งหลังไม่ได้อยู่ในมือเรา</p>
 
     <ol class="road">
       <li class="road__stop">
         <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-design"/></svg>
-        <b>ออกแบบ</b>
+        <b>ออกแบบ</b><small class="say">ตกลงข้อความและตำแหน่ง</small>
       </li>
       <li class="road__stop">
         <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-code"/></svg>
-        <b>เขียนโค้ด</b>
+        <b>เขียนโค้ด</b><small class="say">ฝังหน้าตาลงในตัวแอป</small>
       </li>
       <li class="road__stop">
         <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-test"/></svg>
-        <b>ทดสอบ</b>
+        <b>ทดสอบ</b><small class="say">ลองทุกรุ่น ทุกขนาดจอ</small>
       </li>
       <li class="road__stop road__stop--out">
         <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-store"/></svg>
-        <b>รอสโตร์</b>
+        <b>รอสโตร์</b><small class="say">รอ Apple / Google อนุมัติ</small>
       </li>
       <li class="road__stop road__stop--out">
         <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-rocket"/></svg>
-        <b>ปล่อยแอป</b>
+        <b>ปล่อยแอป</b><small class="say">ขึ้นสโตร์แล้ว แต่ยังไม่ถึงผู้ใช้</small>
       </li>
       <li class="road__stop road__stop--out">
         <svg class="ic ic--road" viewBox="0 0 24 24"><use href="#i-update"/></svg>
-        <b>รอผู้ใช้อัปเดต</b>
+        <b>รอผู้ใช้อัปเดต</b><small class="say">บางคนไม่กดอัปเดตเลย</small>
       </li>
     </ol>
 
@@ -102,12 +103,13 @@
   <!-- ---------- 2 · แนวคิด ---------- -->
   <section class="band">
     <div class="band__head"><span class="band__no">2</span><h2>แยกหน้าตาออกจากตัวแอป</h2></div>
+    <p class="band__say">แอปเก็บ “ชิ้นส่วน” ไว้ในตัว เซิร์ฟเวอร์ส่งมาแค่ “คำสั่งประกอบ”</p>
 
     <div class="eq">
       <figure class="eq__box">
         <svg class="ic ic--xl" viewBox="0 0 24 24"><use href="#i-brick"/></svg>
         <b>ชิ้นส่วน</b>
-        <figcaption>อยู่ในแอปแล้ว</figcaption>
+        <figcaption>อยู่ในแอปแล้ว</figcaption><small class="say">ปุ่ม รูป ป้าย ช่องกรอก เขียนไว้ในแอปตั้งแต่แรก</small>
       </figure>
 
       <span class="eq__op" aria-hidden="true">+</span>
@@ -115,7 +117,7 @@
       <figure class="eq__box eq__box--plan">
         <svg class="ic ic--xl" viewBox="0 0 24 24"><use href="#i-plan"/></svg>
         <b>แบบแปลน</b>
-        <figcaption>มาจากเซิร์ฟเวอร์</figcaption>
+        <figcaption>มาจากเซิร์ฟเวอร์</figcaption><small class="say">บอกว่าหยิบชิ้นไหน เรียงลำดับไหน เขียนข้อความอะไร</small>
       </figure>
 
       <span class="eq__op" aria-hidden="true">=</span>
@@ -123,7 +125,7 @@
       <figure class="eq__box eq__box--out">
         <svg class="ic ic--xl" viewBox="0 0 24 24"><use href="#i-phone"/></svg>
         <b>หน้าจอ</b>
-        <figcaption>ที่ผู้ใช้เห็น</figcaption>
+        <figcaption>ที่ผู้ใช้เห็น</figcaption><small class="say">แอปประกอบขึ้นเองตามแบบแปลนที่ได้รับ</small>
       </figure>
     </div>
 
@@ -136,6 +138,7 @@
   <!-- ---------- 3 · ผลลัพธ์ ---------- -->
   <section class="band">
     <div class="band__head"><span class="band__no">3</span><h2>เร็วขึ้นแค่ไหน</h2></div>
+    <p class="band__say">เวลาที่ใช้เปลี่ยนหน้าจอหนึ่งครั้ง ลดจากหน่วยสัปดาห์เหลือหน่วยนาที</p>
 
     <div class="gauge">
       <div class="gauge__row">
@@ -165,6 +168,7 @@
   <!-- ---------- 4 · เทียบกัน ---------- -->
   <section class="band">
     <div class="band__head"><span class="band__no">4</span><h2>ต่างกันตรงไหน</h2></div>
+    <p class="band__say">ทั้งหมดต่างกันที่คำถามเดียว — “หน้าตาถูกเก็บไว้ที่ไหน”</p>
 
     <div class="mx">
       <div class="mx__head">
@@ -199,38 +203,40 @@
   <!-- ---------- 5 · ได้ / เสีย ---------- -->
   <section class="band">
     <div class="band__head"><span class="band__no">5</span><h2>ได้ / เสีย</h2></div>
+    <p class="band__say">ได้ความเร็วและความยืดหยุ่น แต่ต้องแลกด้วยการลงทุนสร้างระบบและความเสี่ยงที่รวมศูนย์</p>
 
     <div class="tiles">
-      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-bolt"/></svg><b>เปลี่ยนได้ทันที</b></div>
-      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-devices"/></svg><b>ทุกเครื่องเหมือนกัน</b></div>
-      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-undo"/></svg><b>ย้อนกลับง่าย</b></div>
+      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-bolt"/></svg><b>เปลี่ยนได้ทันที</b><small class="say">แก้แบบแปลนแล้วผู้ใช้เห็นในการเปิดครั้งถัดไป</small></div>
+      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-devices"/></svg><b>ทุกเครื่องเหมือนกัน</b><small class="say">iOS · Android · เว็บ อ่านแบบแปลนชุดเดียวกัน</small></div>
+      <div class="tile tile--good"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-undo"/></svg><b>ย้อนกลับง่าย</b><small class="say">ถ้าพัง กดกลับไปใช้แบบแปลนเดิมได้เลย</small></div>
 
-      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-coins"/></svg><b>ต้องลงทุนสร้างก่อน</b></div>
-      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-alert"/></svg><b>พลาดครั้งเดียว กระทบทุกคน</b></div>
-      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-newpiece"/></svg><b>ชิ้นส่วนใหม่ ยังต้องอัปเดตแอป</b></div>
+      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-coins"/></svg><b>ต้องลงทุนสร้างก่อน</b><small class="say">ต้องมี engine และระบบจัดการก่อนจะใช้ได้</small></div>
+      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-alert"/></svg><b>พลาดครั้งเดียว กระทบทุกคน</b><small class="say">ไม่มีขั้นตอนตรวจของสโตร์คั่นให้อีกแล้ว</small></div>
+      <div class="tile tile--bad"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-newpiece"/></svg><b>ชิ้นส่วนใหม่ ยังต้องอัปเดตแอป</b><small class="say">จัดเรียงของเดิมได้ฟรี แต่ของใหม่ต้องวนวงเดิม</small></div>
     </div>
   </section>
 
   <!-- ---------- 6 · ใช้กับหน้าไหน ---------- -->
   <section class="band band--last">
     <div class="band__head"><span class="band__no">6</span><h2>ใช้กับหน้าไหน</h2></div>
+    <p class="band__say">ยิ่งหน้าจอเปลี่ยนบ่อยยิ่งคุ้ม · หน้าที่ต้องคุมฮาร์ดแวร์หรือตอบสนองทันทีไม่เหมาะ</p>
 
     <div class="fit">
       <div class="fit__group fit__group--yes">
         <span class="fit__label"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-check"/></svg> เหมาะ</span>
         <div class="fit__items">
-          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-home"/></svg><b>หน้าแรก</b></div>
-          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-tag"/></svg><b>โปรโมชัน</b></div>
-          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-form"/></svg><b>ฟอร์ม</b></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-home"/></svg><b>หน้าแรก</b><small class="say">เปลี่ยนตามแคมเปญบ่อย</small></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-tag"/></svg><b>โปรโมชัน</b><small class="say">มีช่วงเวลาจำกัด</small></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-form"/></svg><b>ฟอร์ม</b><small class="say">ลูกค้าแต่ละรายขอไม่เหมือนกัน</small></div>
         </div>
       </div>
 
       <div class="fit__group fit__group--no">
         <span class="fit__label"><svg class="ic ic--sm" viewBox="0 0 24 24"><use href="#i-cross"/></svg> ไม่เหมาะ</span>
         <div class="fit__items">
-          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-camera"/></svg><b>กล้อง</b></div>
-          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-map"/></svg><b>แผนที่</b></div>
-          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-game"/></svg><b>เกม</b></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-camera"/></svg><b>กล้อง</b><small class="say">ต้องคุมฮาร์ดแวร์โดยตรง</small></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-map"/></svg><b>แผนที่</b><small class="say">ต้องตอบสนองทันทีทุกการปัด</small></div>
+          <div class="fit__item"><svg class="ic ic--lg" viewBox="0 0 24 24"><use href="#i-game"/></svg><b>เกม</b><small class="say">วาดภาพเองทุกเฟรม</small></div>
         </div>
       </div>
     </div>

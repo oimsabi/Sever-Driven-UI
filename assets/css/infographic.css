@@ -58,6 +58,14 @@
 .ig-sub { margin: 0; font-size: 14.5px; color: var(--text-dim); }
 .ig-sub b { color: var(--text); }
 
+/* =====================================================================
+   ประโยคกำกับภาพ — ซ่อนบนจอเล็ก แสดงบนจอกว้างและตอนพิมพ์
+   ---------------------------------------------------------------------
+   มือถือมีที่จำกัด ถ้าใส่ประโยคทุกภาพจะกลับไปลายตาเหมือนเดิม
+   ส่วนจอคอมมีที่เหลือ การมีประโยคสั้นกำกับทำให้เข้าใจได้เองโดยไม่ต้องมีคนอธิบาย
+   ===================================================================== */
+.say, .band__say { display: none; }
+
 /* ------------------------------------------------------------- แถบเนื้อหา */
 .band {
   background: var(--surface); border: 1px solid var(--line);
@@ -246,7 +254,31 @@
    ≥ 900px
    ===================================================================== */
 @media (min-width: 900px) {
-  .poster { padding: 40px 32px 48px; }
+  /* ขยายผืนให้กว้างขึ้น เพื่อให้ประโยคกำกับมีที่หายใจ ไม่ต้องตัดคำถี่ */
+  .poster { max-width: 1040px; padding: 40px 32px 48px; }
+
+  .band__say {
+    display: block;
+    margin: -8px 0 16px 38px;
+    font-size: 13.5px; color: var(--text-dim); line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .say {
+    display: block;
+    font-size: 11.5px; line-height: 1.5;
+    color: var(--text-faint);
+    /* กันคำโดดท้ายบรรทัด ให้เบราว์เซอร์เกลี่ยความยาวแต่ละบรรทัดเอง */
+    text-wrap: balance;
+  }
+  /* กล่องในสมการต้องสูงเท่ากัน ไม่งั้นดูไม่เป็นระเบียบเวลามีประโยคยาวไม่เท่ากัน */
+  .eq { align-items: stretch; }
+  .eq__op { align-self: center; }
+  /* ในกล่องที่ตัวอักษรถูกย้อมสีตามธีม ต้องบังคับสีประโยคให้จางลง
+     ไม่งั้นประโยคจะเด่นแข่งกับหัวข้อของกล่องเอง */
+  .eq__box .say, .tile .say, .fit__item .say, .road__stop .say { color: var(--text-faint); }
+  .eq__box { padding: 20px 14px; }
+  .tile { padding: 18px 12px; }
+  .road__stop { padding: 16px 8px; }
   .ig-head { margin-bottom: 28px; }
   .band { padding: 22px 24px; margin-bottom: 14px; }
   .ig-sub { font-size: 16px; }
@@ -313,5 +345,8 @@
   .tile--good, .fit__group--yes .fit__label, .fit__group--yes .fit__item { color: #15803d !important; }
   .tile--bad { color: #b45309 !important; }
   .tile b, .fit__item b, .road__stop b { color: #14181f !important; }
+  /* สั่งพิมพ์จากหน้าต่างแคบจะไม่เข้าเงื่อนไข min-width จึงต้องบังคับให้เห็น */
+  .say { display: block !important; font-size: 8.6pt; color: #5b6675 !important; line-height: 1.45; }
+  .band__say { display: block !important; font-size: 9.5pt; color: #3d4757 !important; margin: 0 0 5mm 34pt; }
   .ig-foot__print { display: block !important; margin: 0 !important; font-size: 12px; color: #3d4757 !important; }
 }
